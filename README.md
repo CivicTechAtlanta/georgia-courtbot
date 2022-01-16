@@ -31,3 +31,4 @@ Helping people remember to attend court to help break the cycle of fines and jai
   - Additional counties / municipalities
   - Integration with other courtbot implementation(s)
   - Additional messaging besides SMS
+  - Chatbot like features (reminders, additional details, etc)
