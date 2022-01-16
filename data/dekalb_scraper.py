@@ -55,7 +55,16 @@ def read_search_result(session, headers):
         headers=headers,
     )
 
-    return result.content
+    return json.loads(result.content)
+
+
+def extract_fields_of_interest(case):
+    return {
+        "CaseId": case["CaseId"],
+        "HearingDate": case["HearingDate"],
+        "HearingTime": case["HearingTime"],
+        "CourtRoom": case["CourtRoom"],
+    }
 
 
 def run():
@@ -74,7 +83,8 @@ def run():
         )
 
         result = read_search_result(session, headers)
-        results.append(json.loads(result))
+        result = [extract_fields_of_interest(case) for case in result["Data"]]
+        results.extend(result)
 
     print(json.dumps(results))
 
