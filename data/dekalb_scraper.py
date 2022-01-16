@@ -1,3 +1,4 @@
+import datetime
 import requests
 import json
 from bs4 import BeautifulSoup
@@ -31,17 +32,18 @@ def submit_search_by_judicial_officer(
         "SearchCriteria.SelectedHearingType": "All Hearings",
         "SearchCriteria.SearchByType": "JudicialOfficer",
         "SearchCriteria.SelectedJudicialOfficer": "284",
-        "SearchCriteria.DateFrom": "01/31/2022",
-        "SearchCriteria.DateTo": "02/24/2022",
+        "SearchCriteria.DateFrom": datetime.date.strftime(date_from, "%m/%d/%Y"),
+        "SearchCriteria.DateTo": datetime.date.strftime(date_to, "%m/%d/%Y"),
     }
-    search_result = session.post(
+
+    session.post(
         "https://ody.dekalbcountyga.gov/portal/Hearing/SearchHearings/HearingSearch",
         data=payload,
         headers=headers,
     )
 
 
-def read_search_result(session, headers):
+def get_search_result(session, headers):
     payload = {
         "sort": "",
         "group": "",
@@ -58,7 +60,7 @@ def read_search_result(session, headers):
     return json.loads(result.content)
 
 
-def extract_fields_of_interest(case):
+def fields_of_interest(case):
     return {
         "CaseId": case["CaseId"],
         "HearingDate": case["HearingDate"],
@@ -76,14 +78,16 @@ def run():
 
     results = []
 
+    date_from = datetime.date.today()
+    date_to = date_from + datetime.timedelta(days=90)
+
     for criterium in criteria["judicial_officers"]:
-        judicial_officer = criterium["name"]
         submit_search_by_judicial_officer(
-            session, headers, criterium["value"], "01/31/2022", "02/24/2022"
+            session, headers, criterium["value"], date_from, date_to
         )
 
-        result = read_search_result(session, headers)
-        result = [extract_fields_of_interest(case) for case in result["Data"]]
+        result = get_search_result(session, headers)
+        result = [fields_of_interest(case) for case in result["Data"]]
         results.extend(result)
 
     print(json.dumps(results))
