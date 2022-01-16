@@ -22,27 +22,33 @@ class API:
             ],
         }
 
-    def submit_search_by_judicial_officer(self, judicial_officer, date_from, date_to):
-        payload = {
+    def submit_search_by_judicial_officer(self, name, date_from, date_to):
+        to_date_string = lambda d: datetime.date.strftime(d, "%m/%d/%Y")
+        url = (
+            "https://ody.dekalbcountyga.gov/portal/Hearing/SearchHearings/HearingSearch"
+        )
+
+        data = {
             "PortletName": "HearingSearch",
             "Settings.CaptchaEnabled": "False",
             "Settings.DefaultLocation": "All Courts",
             "SearchCriteria.SelectedCourt": "All Courts",
             "SearchCriteria.SelectedHearingType": "All Hearings",
             "SearchCriteria.SearchByType": "JudicialOfficer",
-            "SearchCriteria.SelectedJudicialOfficer": judicial_officer,
-            "SearchCriteria.DateFrom": datetime.date.strftime(date_from, "%m/%d/%Y"),
-            "SearchCriteria.DateTo": datetime.date.strftime(date_to, "%m/%d/%Y"),
+            "SearchCriteria.SelectedJudicialOfficer": name,
+            "SearchCriteria.DateFrom": to_date_string(date_from),
+            "SearchCriteria.DateTo": to_date_string(date_to),
         }
 
         self.session.post(
-            "https://ody.dekalbcountyga.gov/portal/Hearing/SearchHearings/HearingSearch",
-            data=payload,
+            url,
+            data=data,
             headers=self.headers,
         )
 
     def get_search_result(self):
-        payload = {
+        url = "https://ody.dekalbcountyga.gov/portal/Hearing/HearingResults/Read"
+        data = {
             "sort": "",
             "group": "",
             "filter": "",
@@ -50,8 +56,8 @@ class API:
         }
 
         response = self.session.post(
-            "https://ody.dekalbcountyga.gov/portal/Hearing/HearingResults/Read",
-            data=payload,
+            url,
+            data=data,
             headers=self.headers,
         )
 
@@ -80,7 +86,7 @@ def run():
 
     results = []
 
-    log("Scraping Dekalb County court cases by judicial officer...")
+    log("Scraping Dekalb County court cases per judicial officer...")
     log("ID\tName")
 
     for judicial_officer in criteria["judicial_officers"]:
@@ -92,6 +98,7 @@ def run():
         result = api.get_search_result()
         result = [api.fields_of_interest(case) for case in result["Data"]]
         results.extend(result)
+    log("Finished.")
 
     print(json.dumps(results))
 
