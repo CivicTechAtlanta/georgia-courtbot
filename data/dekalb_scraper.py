@@ -11,12 +11,8 @@ def get_available_criteria(session, headers):
 
     return {
         "judicial_officers": [
-            {"value": el.get("value"), "name": el.get_text()}
+            {"id": el.get("value"), "name": el.get_text()}
             for el in soup.select("#selHSJudicialOfficer option")
-        ],
-        "courtrooms": [
-            {"value": el.get("value"), "name": el.get_text()}
-            for el in soup.select("#selHSCourtroom option")
         ],
     }
 
@@ -31,7 +27,7 @@ def submit_search_by_judicial_officer(
         "SearchCriteria.SelectedCourt": "All Courts",
         "SearchCriteria.SelectedHearingType": "All Hearings",
         "SearchCriteria.SearchByType": "JudicialOfficer",
-        "SearchCriteria.SelectedJudicialOfficer": "284",
+        "SearchCriteria.SelectedJudicialOfficer": judicial_officer,
         "SearchCriteria.DateFrom": datetime.date.strftime(date_from, "%m/%d/%Y"),
         "SearchCriteria.DateTo": datetime.date.strftime(date_to, "%m/%d/%Y"),
     }
@@ -81,9 +77,9 @@ def run():
     date_from = datetime.date.today()
     date_to = date_from + datetime.timedelta(days=90)
 
-    for criterium in criteria["judicial_officers"]:
+    for judicial_officer in criteria["judicial_officers"]:
         submit_search_by_judicial_officer(
-            session, headers, criterium["value"], date_from, date_to
+            session, headers, judicial_officer["id"], date_from, date_to
         )
 
         result = get_search_result(session, headers)
