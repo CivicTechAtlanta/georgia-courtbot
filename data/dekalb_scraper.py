@@ -1,3 +1,4 @@
+import argparse
 import datetime
 import requests
 import json
@@ -95,7 +96,7 @@ def take_fields_of_interest(case):
     }
 
 
-def run():
+def run(output_format):
     api = API()
 
     date_from = datetime.date.today()
@@ -112,7 +113,23 @@ def run():
 
     log("Finished.")
 
-    write_csv(results)
+    if output_format == "csv":
+        write_csv(results)
+        return
+    if output_format == "json":
+        write_json(results)
+
+    print(f"Unknown output format: '{output_format}'!")
 
 
-run()
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--output", nargs="?", choices=["json", "csv"], help="Output format"
+)
+
+args = parser.parse_args()
+if args.output is None:
+    parser.print_help()
+    sys.exit(1)
+
+run(args.output)
