@@ -2,6 +2,7 @@ import datetime
 import requests
 import json
 import sys
+import csv
 from bs4 import BeautifulSoup
 
 
@@ -74,6 +75,17 @@ def log(str):
     print(str, file=sys.stderr)
 
 
+def write_json(results):
+    print(json.dumps(results))
+
+
+def write_csv(results):
+    fieldnames = ["CaseId", "HearingDate", "HearingTime", "CourtRoom"]
+    writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerows(results)
+
+
 def take_fields_of_interest(case):
     return {
         "CaseId": case["CaseId"],
@@ -100,7 +112,7 @@ def run():
 
     log("Finished.")
 
-    print(json.dumps(results))
+    write_csv(results)
 
 
 run()
