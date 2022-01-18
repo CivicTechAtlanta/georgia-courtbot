@@ -117,8 +117,13 @@ def run(output_format):
 
     for officer in api.get_all_judicial_officers():
         cases = api.get_cases_by_judicial_officer(officer, date_from, date_to)
+        fields_of_interest = [take_fields_of_interest(case) for case in cases]
+        fields_of_interest = [
+            fields | {"JudicialOfficer": officer["name"]}
+            for fields in fields_of_interest
+        ]
 
-        results.extend([take_fields_of_interest(case) for case in cases])
+        results.extend(fields_of_interest)
 
     log("Finished.")
 
