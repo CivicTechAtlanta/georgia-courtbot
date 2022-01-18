@@ -1,7 +1,9 @@
+import argparse
 import datetime
 import requests
 import json
 import sys
+import csv
 from bs4 import BeautifulSoup
 
 
@@ -74,6 +76,17 @@ def log(str):
     print(str, file=sys.stderr)
 
 
+def write_json(results):
+    print(json.dumps(results))
+
+
+def write_csv(results):
+    fieldnames = ["CaseId", "HearingDate", "HearingTime", "CourtRoom"]
+    writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerows(results)
+
+
 def take_fields_of_interest(case):
     return {
         "CaseId": case["CaseId"],
@@ -83,7 +96,7 @@ def take_fields_of_interest(case):
     }
 
 
-def run():
+def run(output_format):
     api = API()
 
     date_from = datetime.date.today()
@@ -100,7 +113,23 @@ def run():
 
     log("Finished.")
 
-    print(json.dumps(results))
+    if output_format == "csv":
+        write_csv(results)
+        return
+    if output_format == "json":
+        write_json(results)
+
+    print(f"Unknown output format: '{output_format}'!")
 
 
-run()
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--output", nargs="?", choices=["json", "csv"], help="Output format"
+)
+
+args = parser.parse_args()
+if args.output is None:
+    parser.print_help()
+    sys.exit(1)
+
+run(args.output)
