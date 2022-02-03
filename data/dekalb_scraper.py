@@ -1,4 +1,4 @@
-import argparse
+import click
 import datetime
 import requests
 import json
@@ -140,14 +140,7 @@ def report(results, output_format):
     print(f"Unknown output format: '{output_format}'!")
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "--output", nargs="?", choices=["json", "csv"], help="Output format"
-)
-
-args = parser.parse_args()
-if args.output is None:
-    parser.print_help()
-    sys.exit(1)
-
-report(scrape(), output_format=args.output)
+@click.command()
+@click.option("--output", type=click.Choice(["csv", "json"], case_sensitive=False))
+def run(output):
+    report(scrape(), output_format=output)
