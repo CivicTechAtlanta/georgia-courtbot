@@ -7,7 +7,7 @@ import csv
 from bs4 import BeautifulSoup
 
 
-class API:
+class Scraper:
     def __init__(self):
         self.headers = {"User-Agent": "CodeForAtlanta Court Bot"}
         self.session = requests.Session()
@@ -105,7 +105,7 @@ def take_fields_of_interest(case):
 
 
 def run(output_format):
-    api = API()
+    scraper = Scraper()
 
     date_from = datetime.date.today()
     date_to = date_from + datetime.timedelta(days=90)
@@ -115,8 +115,8 @@ def run(output_format):
     log("Scraping Dekalb County court cases per judicial officer...")
     log("ID\tName")
 
-    for officer in api.get_all_judicial_officers():
-        cases = api.get_cases_by_judicial_officer(officer, date_from, date_to)
+    for officer in scraper.get_all_judicial_officers():
+        cases = scraper.get_cases_by_judicial_officer(officer, date_from, date_to)
         fields_of_interest = [take_fields_of_interest(case) for case in cases]
         fields_of_interest = [
             fields | {"JudicialOfficer": officer["name"]}
