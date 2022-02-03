@@ -69,7 +69,9 @@ class Scraper:
         log(f'{officer["id"]}\t{officer["name"]}')
         self.submit_search_by_judicial_officer(officer["id"], date_from, date_to)
 
-        return self.get_search_result()["Data"]
+        response = self.get_search_result()
+        print(json.dumps(response, indent=2))
+        return response["Data"]
 
 
 def log(str):
@@ -101,6 +103,7 @@ def take_fields_of_interest(case):
         "HearingDate": case["HearingDate"],
         "HearingTime": case["HearingTime"],
         "CourtRoom": case["CourtRoom"],
+        "JudicialOfficer": case["JudgeParsed"],
     }
 
 
@@ -117,15 +120,7 @@ def scrape():
 
     for officer in scraper.get_all_judicial_officers():
         cases = scraper.get_cases_by_judicial_officer(officer, date_from, date_to)
-        fields_of_interest = [take_fields_of_interest(case) for case in cases]
-        fields_of_interest = [
-            fields | {"JudicialOfficer": officer["name"]}
-            for fields in fields_of_interest
-        ]
-
-        results.extend(fields_of_interest)
-
-    log("Finished.")
+        results.extend([take_fields_of_interest(case) for case in cases])
 
     return results
 
@@ -144,3 +139,6 @@ def report(results, output_format):
 @click.option("--output", type=click.Choice(["csv", "json"], case_sensitive=False))
 def run(output):
     report(scrape(), output_format=output)
+
+
+run()
