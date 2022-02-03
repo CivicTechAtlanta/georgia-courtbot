@@ -104,7 +104,7 @@ def take_fields_of_interest(case):
     }
 
 
-def run(output_format):
+def scrape():
     scraper = Scraper()
 
     date_from = datetime.date.today()
@@ -127,6 +127,10 @@ def run(output_format):
 
     log("Finished.")
 
+    return results
+
+
+def report(results, output_format):
     if output_format == "csv":
         write_csv(results)
         return
@@ -146,4 +150,4 @@ if args.output is None:
     parser.print_help()
     sys.exit(1)
 
-run(args.output)
+report(scrape(), output_format=args.output)
