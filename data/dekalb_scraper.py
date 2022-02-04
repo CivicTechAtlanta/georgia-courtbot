@@ -25,7 +25,6 @@ class Scraper:
         return filter(lambda e: e["name"] != "", result)
 
     def submit_search_by_judicial_officer(self, name, date_from, date_to):
-        to_date_string = lambda d: datetime.date.strftime(d, "%m/%d/%Y")
         url = (
             "https://ody.dekalbcountyga.gov/portal/Hearing/SearchHearings/HearingSearch"
         )
@@ -38,8 +37,8 @@ class Scraper:
             "SearchCriteria.SelectedHearingType": "All Hearings",
             "SearchCriteria.SearchByType": "JudicialOfficer",
             "SearchCriteria.SelectedJudicialOfficer": name,
-            "SearchCriteria.DateFrom": to_date_string(date_from),
-            "SearchCriteria.DateTo": to_date_string(date_to),
+            "SearchCriteria.DateFrom": datetime_to_hearing_date(date_from),
+            "SearchCriteria.DateTo": datetime_to_hearing_date(date_to),
         }
 
         self.session.post(
@@ -66,34 +65,33 @@ class Scraper:
         return json.loads(response.content)
 
     def get_cases_by_judicial_officer(self, officer, date_from, date_to):
-        log(f'{officer["id"]}\t{officer["name"]}')
         self.submit_search_by_judicial_officer(officer["id"], date_from, date_to)
-
         response = self.get_search_result()
-        print(json.dumps(response, indent=2))
-        return response["Data"]
+        cases = response["Data"]
+        if response["MaxResultsHit"] == True:
+            last_case = max(
+                cases, key=lambda case: hearing_date_to_datetime(case["HearingDate"])
+            )
+            offset_date_from = hearing_date_to_datetime(last_case["HearingDate"])
+            page = self.get_cases_by_judicial_officer(
+                officer, offset_date_from, date_to
+            )
+            cases.extend(case for case in page if case not in cases)
+
+        return cases
 
 
-def log(str):
-    print(str, file=sys.stderr)
+def hearing_date_to_datetime(string):
+    return datetime.datetime.strptime(string, "%m/%d/%Y")
 
 
-def write_json(results):
-    print(json.dumps(results))
+def datetime_to_hearing_date(dt):
+    return datetime.date.strftime(dt, "%m/%d/%Y")
 
 
-def write_csv(results):
-    fieldnames = [
-        "CaseId",
-        "CaseNumber",
-        "JudicialOfficer",
-        "HearingDate",
-        "HearingTime",
-        "CourtRoom",
-    ]
-    writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
-    writer.writeheader()
-    writer.writerows(results)
+def log(*args):
+    for arg in args:
+        print(arg, file=sys.stderr)
 
 
 def take_fields_of_interest(case):
@@ -115,10 +113,14 @@ def scrape():
 
     results = []
 
-    log("Scraping Dekalb County court cases per judicial officer...")
-    log("ID\tName")
+    log(
+        f"Scraping Dekalb County court cases per judicial officer from {date_from} to {date_to}.",
+        f"---",
+        f"ID\tName\t",
+    )
 
     for officer in scraper.get_all_judicial_officers():
+        log(f'{officer["id"]}\t{officer["name"]}')
         cases = scraper.get_cases_by_judicial_officer(officer, date_from, date_to)
         results.extend([take_fields_of_interest(case) for case in cases])
 
@@ -126,13 +128,28 @@ def scrape():
 
 
 def report(results, output_format):
+    def write_json(results):
+        print(json.dumps(results))
+
+    def write_csv(results):
+        fieldnames = [
+            "CaseId",
+            "CaseNumber",
+            "JudicialOfficer",
+            "HearingDate",
+            "HearingTime",
+            "CourtRoom",
+        ]
+        writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(results)
+
     if output_format == "csv":
         write_csv(results)
-        return
-    if output_format == "json":
+    elif output_format == "json":
         write_json(results)
-
-    print(f"Unknown output format: '{output_format}'!")
+    else:
+        log(f"Unknown output format: '{output_format}'!")
 
 
 @click.command()
