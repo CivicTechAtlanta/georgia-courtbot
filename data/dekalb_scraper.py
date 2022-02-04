@@ -105,11 +105,11 @@ def take_fields_of_interest(case):
     }
 
 
-def scrape():
+def scrape(days):
     scraper = Scraper()
 
     date_from = datetime.date.today()
-    date_to = date_from + datetime.timedelta(days=90)
+    date_to = date_from + datetime.timedelta(days)
 
     results = []
 
@@ -153,9 +153,19 @@ def report(results, output_format):
 
 
 @click.command()
-@click.option("--output", type=click.Choice(["csv", "json"], case_sensitive=False))
-def run(output):
-    report(scrape(), output_format=output)
+@click.option(
+    "--output",
+    type=click.Choice(["csv", "json"]),
+    help="Format to use when reporting scraped data.",
+)
+@click.option(
+    "--days",
+    type=int,
+    default=90,
+    help="How many days of data to scrape, measured from today. Default is 90 days.",
+)
+def run(output, days):
+    report(scrape(days=days), output_format=output)
 
 
 run()
