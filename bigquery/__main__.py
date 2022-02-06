@@ -43,7 +43,9 @@ def cli(ctx, key_path):
     required=True,
     help="BigQuery Table Id",
 )
-@click.option("--data", type=click.File("rb"), required=True, help="Data to import")
+@click.option(
+    "--data", type=click.File("rb"), required=True, help="Data to import in CSV format"
+)
 def upload(ctx, dataset_id, table_id, data):
     client = ctx.obj["BigQueryClient"]
     job_config = bigquery.LoadJobConfig(
@@ -54,10 +56,8 @@ def upload(ctx, dataset_id, table_id, data):
 
     resource = f"{client.project}.{dataset_id}.{table_id}"
     job = client.load_table_from_file(data, resource, job_config=job_config)
-
-    job.result()  # Waits for the job to complete.
-
-    table = client.get_table(resource)  # Make an API request.
+    job.result()
+    table = client.get_table(resource)
 
     print(
         "Loaded {} rows and {} columns to {}".format(
@@ -106,9 +106,7 @@ def create(ctx, dataset_id, table_id):
     dataset = bigquery.Dataset(f"{client.project}.{dataset_id}")
     dataset.location = "US"
 
-    # Send the dataset to the API for creation, with an explicit timeout.
-    # Raises google.api_core.exceptions.Conflict if the Dataset already
-    # exists within the project.
+    # Raises google.api_core.exceptions.Conflict if the Dataset exists.
     try:
         dataset = client.create_dataset(dataset, timeout=30)  # Make an API request.
     except Conflict:
