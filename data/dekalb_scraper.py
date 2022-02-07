@@ -1,4 +1,4 @@
-import argparse
+import click
 import datetime
 import requests
 import json
@@ -7,7 +7,7 @@ import csv
 from bs4 import BeautifulSoup
 
 
-class API:
+class Scraper:
     def __init__(self):
         self.headers = {"User-Agent": "CodeForAtlanta Court Bot"}
         self.session = requests.Session()
@@ -25,7 +25,6 @@ class API:
         return filter(lambda e: e["name"] != "", result)
 
     def submit_search_by_judicial_officer(self, name, date_from, date_to):
-        to_date_string = lambda d: datetime.date.strftime(d, "%m/%d/%Y")
         url = (
             "https://ody.dekalbcountyga.gov/portal/Hearing/SearchHearings/HearingSearch"
         )
@@ -38,8 +37,8 @@ class API:
             "SearchCriteria.SelectedHearingType": "All Hearings",
             "SearchCriteria.SearchByType": "JudicialOfficer",
             "SearchCriteria.SelectedJudicialOfficer": name,
-            "SearchCriteria.DateFrom": to_date_string(date_from),
-            "SearchCriteria.DateTo": to_date_string(date_to),
+            "SearchCriteria.DateFrom": datetime_to_hearing_date(date_from),
+            "SearchCriteria.DateTo": datetime_to_hearing_date(date_to),
         }
 
         self.session.post(
@@ -66,32 +65,33 @@ class API:
         return json.loads(response.content)
 
     def get_cases_by_judicial_officer(self, officer, date_from, date_to):
-        log(f'{officer["id"]}\t{officer["name"]}')
         self.submit_search_by_judicial_officer(officer["id"], date_from, date_to)
+        response = self.get_search_result()
+        cases = response["Data"]
+        if response["MaxResultsHit"] == True:
+            last_case = max(
+                cases, key=lambda case: hearing_date_to_datetime(case["HearingDate"])
+            )
+            offset_date_from = hearing_date_to_datetime(last_case["HearingDate"])
+            page = self.get_cases_by_judicial_officer(
+                officer, offset_date_from, date_to
+            )
+            cases.extend(case for case in page if case not in cases)
 
-        return self.get_search_result()["Data"]
+        return cases
 
 
-def log(str):
-    print(str, file=sys.stderr)
+def hearing_date_to_datetime(string):
+    return datetime.datetime.strptime(string, "%m/%d/%Y")
 
 
-def write_json(results):
-    print(json.dumps(results))
+def datetime_to_hearing_date(dt):
+    return datetime.date.strftime(dt, "%m/%d/%Y")
 
 
-def write_csv(results):
-    fieldnames = [
-        "CaseId",
-        "CaseNumber",
-        "JudicialOfficer",
-        "HearingDate",
-        "HearingTime",
-        "CourtRoom",
-    ]
-    writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
-    writer.writeheader()
-    writer.writerows(results)
+def log(*args):
+    for arg in args:
+        print(arg, file=sys.stderr)
 
 
 def take_fields_of_interest(case):
@@ -101,49 +101,71 @@ def take_fields_of_interest(case):
         "HearingDate": case["HearingDate"],
         "HearingTime": case["HearingTime"],
         "CourtRoom": case["CourtRoom"],
+        "JudicialOfficer": case["JudgeParsed"],
     }
 
 
-def run(output_format):
-    api = API()
+def scrape(days):
+    scraper = Scraper()
 
     date_from = datetime.date.today()
-    date_to = date_from + datetime.timedelta(days=90)
+    date_to = date_from + datetime.timedelta(days)
 
     results = []
 
-    log("Scraping Dekalb County court cases per judicial officer...")
-    log("ID\tName")
+    log(
+        f"Scraping Dekalb County court cases per judicial officer from {date_from} to {date_to}.",
+        f"---",
+        f"ID\tName\t",
+    )
 
-    for officer in api.get_all_judicial_officers():
-        cases = api.get_cases_by_judicial_officer(officer, date_from, date_to)
-        fields_of_interest = [take_fields_of_interest(case) for case in cases]
-        fields_of_interest = [
-            fields | {"JudicialOfficer": officer["name"]}
-            for fields in fields_of_interest
+    for officer in scraper.get_all_judicial_officers():
+        log(f'{officer["id"]}\t{officer["name"]}')
+        cases = scraper.get_cases_by_judicial_officer(officer, date_from, date_to)
+        results.extend([take_fields_of_interest(case) for case in cases])
+
+    return results
+
+
+def report(results, output_format):
+    def write_json(results):
+        print(json.dumps(results))
+
+    def write_csv(results):
+        fieldnames = [
+            "CaseId",
+            "CaseNumber",
+            "JudicialOfficer",
+            "HearingDate",
+            "HearingTime",
+            "CourtRoom",
         ]
-
-        results.extend(fields_of_interest)
-
-    log("Finished.")
+        writer = csv.DictWriter(sys.stdout, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(results)
 
     if output_format == "csv":
         write_csv(results)
-        return
-    if output_format == "json":
+    elif output_format == "json":
         write_json(results)
+    else:
+        log(f"Unknown output format: '{output_format}'!")
 
-    print(f"Unknown output format: '{output_format}'!")
 
-
-parser = argparse.ArgumentParser()
-parser.add_argument(
-    "--output", nargs="?", choices=["json", "csv"], help="Output format"
+@click.command()
+@click.option(
+    "--output",
+    type=click.Choice(["csv", "json"]),
+    help="Format to use when reporting scraped data.",
 )
+@click.option(
+    "--days",
+    type=int,
+    default=90,
+    help="How many days of data to scrape, measured from today. Default is 90 days.",
+)
+def run(output, days):
+    report(scrape(days=days), output_format=output)
 
-args = parser.parse_args()
-if args.output is None:
-    parser.print_help()
-    sys.exit(1)
 
-run(args.output)
+run()

@@ -1,0 +1,218 @@
+{
+  "description": "A New Flow",
+  "states": [
+    {
+      "name": "Trigger",
+      "type": "trigger",
+      "transitions": [
+        {
+          "next": "send_message_1",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "incomingCall"
+        },
+        {
+          "event": "incomingRequest"
+        },
+        {
+          "event": "incomingParent"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -30,
+          "y": -40
+        }
+      }
+    },
+    {
+      "name": "cya_consent",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "check_cya_consent",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 70,
+          "y": 400
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "CYA language indicating we're not affiliated with courts, don't rely on this alone. Reply \"Y\" to agree",
+        "timeout": "3600"
+      }
+    },
+    {
+      "name": "check_cya_consent",
+      "type": "split-based-on",
+      "transitions": [
+        {
+          "event": "noMatch"
+        },
+        {
+          "next": "send_and_reply_1",
+          "event": "match",
+          "conditions": [
+            {
+              "friendly_name": "If value matches_any_of Y,Yes",
+              "arguments": [
+                "{{widgets.cya_consent.inbound.Body}}"
+              ],
+              "type": "matches_any_of",
+              "value": "Y,Yes"
+            }
+          ]
+        }
+      ],
+      "properties": {
+        "input": "{{widgets.cya_consent.inbound.Body}}",
+        "offset": {
+          "x": 60,
+          "y": 670
+        }
+      }
+    },
+    {
+      "name": "next_hearing_details",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": -20,
+          "y": 1420
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Your next hearing is on {{widgets.function_1.parsed.date}} at {{widgets.function_1.parsed.time}} at {{widgets.function_1.parsed.courtroom}}- we'll send you a reminder 3 days ahead & 1 day ahead"
+      }
+    },
+    {
+      "name": "function_1",
+      "type": "run-function",
+      "transitions": [
+        {
+          "next": "next_hearing_details",
+          "event": "success"
+        },
+        {
+          "next": "send_message_2",
+          "event": "fail"
+        }
+      ],
+      "properties": {
+        "service_sid": "ZS692250958de4c93482abb9625db310bf",
+        "environment_sid": "ZE24775734d26116e17a318dfb4a970ef4",
+        "offset": {
+          "x": 300,
+          "y": 1150
+        },
+        "function_sid": "ZH26749ac817d7c888e115213c0d862b65",
+        "parameters": [
+          {
+            "value": "{{widgets.send_and_reply_1.inbound.Body}}",
+            "key": "user_text"
+          }
+        ],
+        "url": "https://googlecloudquery-1810.twil.io/getCase"
+      }
+    },
+    {
+      "name": "send_message_1",
+      "type": "send-message",
+      "transitions": [
+        {
+          "next": "cya_consent",
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 80,
+          "y": 160
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Welcome to Georgia Courtbot"
+      }
+    },
+    {
+      "name": "send_and_reply_1",
+      "type": "send-and-wait-for-reply",
+      "transitions": [
+        {
+          "next": "function_1",
+          "event": "incomingMessage"
+        },
+        {
+          "event": "timeout"
+        },
+        {
+          "event": "deliveryFailure"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 120,
+          "y": 910
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "body": "Great! Please reply with your case number. Most case #'s look like \"21FM8850\"",
+        "timeout": "3600"
+      }
+    },
+    {
+      "name": "send_message_2",
+      "type": "send-message",
+      "transitions": [
+        {
+          "event": "sent"
+        },
+        {
+          "event": "failed"
+        }
+      ],
+      "properties": {
+        "offset": {
+          "x": 510,
+          "y": 1390
+        },
+        "service": "{{trigger.message.InstanceSid}}",
+        "channel": "{{trigger.message.ChannelSid}}",
+        "from": "{{flow.channel.address}}",
+        "to": "{{contact.channel.address}}",
+        "body": "Sorry, it looks like that isn't a valid case number"
+      }
+    }
+  ],
+  "initial_state": "Trigger",
+  "flags": {
+    "allow_concurrent_calls": true
+  }
+}
