@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "properties": {
+    "CaseId": { "type": "number" },
+    "CaseNumber": { "type": "string" },
+    "HearingDate": { "type": "string" },
+    "HearingTime": { "type": "string" },
+    "CourtRoom": { "type": "string" },
+    "JudicialOfficer": { "type": "string" }
+  }
+}

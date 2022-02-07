@@ -4,6 +4,8 @@ import requests
 import json
 import sys
 import csv
+import jsonschema
+import os
 from bs4 import BeautifulSoup
 
 
@@ -127,6 +129,13 @@ def scrape(days):
     return results
 
 
+def validate(results):
+    schema_file_path = os.path.join(os.path.dirname(__file__), "schema", "case.json")
+    schema = json.load(open(schema_file_path))
+    for case in results:
+        jsonschema.validate(instance=case, schema=schema)
+
+
 def report(results, output_format):
     def write_json(results):
         print(json.dumps(results))
@@ -165,7 +174,9 @@ def report(results, output_format):
     help="How many days of data to scrape, measured from today. Default is 90 days.",
 )
 def run(output, days):
-    report(scrape(days=days), output_format=output)
+    results = scrape(days=days)
+    validate(results)
+    report(results, output_format=output)
 
 
 run()
