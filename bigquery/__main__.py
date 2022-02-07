@@ -5,15 +5,18 @@ from google.oauth2 import service_account
 
 
 def Client(key_path):
-    credentials = service_account.Credentials.from_service_account_file(
-        key_path,
-        scopes=["https://www.googleapis.com/auth/cloud-platform"],
-    )
+    if key_path is not None:
+        credentials = service_account.Credentials.from_service_account_file(
+            key_path,
+            scopes=["https://www.googleapis.com/auth/cloud-platform"],
+        )
 
-    return bigquery.Client(
-        credentials=credentials,
-        project=credentials.project_id,
-    )
+        return bigquery.Client(
+            credentials=credentials,
+            project=credentials.project_id,
+        )
+    else:
+        return bigquery.Client()
 
 
 @click.group()
@@ -21,7 +24,7 @@ def Client(key_path):
 @click.option(
     "--key-path",
     type=click.Path(exists=True),
-    required=True,
+    required=False,
     help="Google API service account credential file",
 )
 def cli(ctx, key_path):
@@ -32,13 +35,19 @@ def cli(ctx, key_path):
 @cli.command()
 @click.pass_context
 @click.option(
-    "--dataset_id",
+    "--project-id",
+    type=str,
+    required=True,
+    help="BigQuery Project Id",
+)
+@click.option(
+    "--dataset-id",
     type=str,
     required=True,
     help="BigQuery Dataset Id",
 )
 @click.option(
-    "--table_id",
+    "--table-id",
     type=str,
     required=True,
     help="BigQuery Table Id",
@@ -46,7 +55,7 @@ def cli(ctx, key_path):
 @click.option(
     "--data", type=click.File("rb"), required=True, help="Data to import in CSV format"
 )
-def upload(ctx, dataset_id, table_id, data):
+def upload(ctx, project_id, dataset_id, table_id, data):
     client = ctx.obj["BigQueryClient"]
     job_config = bigquery.LoadJobConfig(
         source_format=bigquery.SourceFormat.CSV,
@@ -54,7 +63,7 @@ def upload(ctx, dataset_id, table_id, data):
         autodetect=True,
     )
 
-    resource = f"{client.project}.{dataset_id}.{table_id}"
+    resource = f"{project_id}.{dataset_id}.{table_id}"
     job = client.load_table_from_file(data, resource, job_config=job_config)
     job.result()
     table = client.get_table(resource)
@@ -69,20 +78,26 @@ def upload(ctx, dataset_id, table_id, data):
 @cli.command()
 @click.pass_context
 @click.option(
-    "--dataset_id",
+    "--project-id",
+    type=str,
+    required=True,
+    help="BigQuery Project Id",
+)
+@click.option(
+    "--dataset-id",
     type=str,
     required=True,
     help="BigQuery Dataset Id" "--table_id",
 )
 @click.option(
-    "--table_id",
+    "--table-id",
     type=str,
     required=True,
     help="BigQuery Table Id",
 )
-def delete(ctx, dataset_id, table_id):
+def delete(ctx, project_id, dataset_id, table_id):
     client = ctx.obj["BigQueryClient"]
-    fqp = f"{client.project}.{dataset_id}.{table_id}"
+    fqp = f"{project_id}.{dataset_id}.{table_id}"
     client.delete_table(fqp, not_found_ok=True)  # Make an API request.
     print(f"Deleted table '{fqp}'")
 
@@ -90,20 +105,26 @@ def delete(ctx, dataset_id, table_id):
 @cli.command()
 @click.pass_context
 @click.option(
-    "--dataset_id",
+    "--project-id",
     type=str,
     required=True,
-    help="BigQuery Dataset Id" "--table_id",
+    help="BigQuery Project Id",
 )
 @click.option(
-    "--table_id",
+    "--dataset-id",
+    type=str,
+    required=True,
+    help="BigQuery Dataset Id",
+)
+@click.option(
+    "--table-id",
     type=str,
     required=True,
     help="BigQuery Table Id",
 )
-def create(ctx, dataset_id, table_id):
+def create(ctx, project_id, dataset_id, table_id):
     client = ctx.obj["BigQueryClient"]
-    dataset = bigquery.Dataset(f"{client.project}.{dataset_id}")
+    dataset = bigquery.Dataset(f"{project_id}.{dataset_id}")
     dataset.location = "US"
 
     # Raises google.api_core.exceptions.Conflict if the Dataset exists.
@@ -126,9 +147,7 @@ def create(ctx, dataset_id, table_id):
     ]
 
     try:
-        table = bigquery.Table(
-            f"{client.project}.{dataset_id}.{table_id}", schema=schema
-        )
+        table = bigquery.Table(f"{project_id}.{dataset_id}.{table_id}", schema=schema)
         table = client.create_table(table)  # Make an API request.
         print(
             "Created table {}.{}.{}".format(
