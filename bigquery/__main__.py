@@ -57,6 +57,17 @@ def cli(ctx, key_path):
 )
 def upload(ctx, project_id, dataset_id, table_id, data):
     client = ctx.obj["BigQueryClient"]
+
+    dataset = bigquery.Dataset(f"{project_id}.{dataset_id}")
+    dataset.location = "US"
+
+    # Raises google.api_core.exceptions.Conflict if the Dataset exists.
+    try:
+        dataset = client.create_dataset(dataset, timeout=30)  # Make an API request.
+    except Conflict:
+        print("Dataset already exists.")
+        pass
+
     job_config = bigquery.LoadJobConfig(
         source_format=bigquery.SourceFormat.CSV,
         skip_leading_rows=1,
@@ -100,65 +111,6 @@ def delete(ctx, project_id, dataset_id, table_id):
     fqp = f"{project_id}.{dataset_id}.{table_id}"
     client.delete_table(fqp, not_found_ok=True)  # Make an API request.
     print(f"Deleted table '{fqp}'")
-
-
-@cli.command()
-@click.pass_context
-@click.option(
-    "--project-id",
-    type=str,
-    required=True,
-    help="BigQuery Project Id",
-)
-@click.option(
-    "--dataset-id",
-    type=str,
-    required=True,
-    help="BigQuery Dataset Id",
-)
-@click.option(
-    "--table-id",
-    type=str,
-    required=True,
-    help="BigQuery Table Id",
-)
-def create(ctx, project_id, dataset_id, table_id):
-    client = ctx.obj["BigQueryClient"]
-    dataset = bigquery.Dataset(f"{project_id}.{dataset_id}")
-    dataset.location = "US"
-
-    # Raises google.api_core.exceptions.Conflict if the Dataset exists.
-    try:
-        dataset = client.create_dataset(dataset, timeout=30)  # Make an API request.
-    except Conflict:
-        print("Dataset already exists.")
-        pass
-    except Exception as e:
-        print(e)
-        return
-
-    schema = [
-        bigquery.SchemaField("CaseId", "INTEGER", mode="NULLABLE"),
-        bigquery.SchemaField("CaseNumber", "STRING", mode="NULLABLE"),
-        bigquery.SchemaField("JudicialOfficer", "STRING", mode="NULLABLE"),
-        bigquery.SchemaField("HearingDate", "DATE", mode="NULLABLE"),
-        bigquery.SchemaField("HearingTime", "STRING", mode="NULLABLE"),
-        bigquery.SchemaField("CourtRoom", "STRING", mode="NULLABLE"),
-    ]
-
-    try:
-        table = bigquery.Table(f"{project_id}.{dataset_id}.{table_id}", schema=schema)
-        table = client.create_table(table)  # Make an API request.
-        print(
-            "Created table {}.{}.{}".format(
-                table.project, table.dataset_id, table.table_id
-            )
-        )
-    except Conflict:
-        print("Table already exists.")
-    except Exception as e:
-        print(e)
-        return
 
 
 cli()
