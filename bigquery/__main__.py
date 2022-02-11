@@ -35,37 +35,25 @@ def cli(ctx, key_path):
 @cli.command()
 @click.pass_context
 @click.option(
-    "--project-id",
-    type=str,
-    required=True,
-    help="BigQuery Project Id",
-)
-@click.option(
-    "--dataset-id",
-    type=str,
-    required=True,
-    help="BigQuery Dataset Id",
-)
-@click.option(
     "--table-id",
     type=str,
     required=True,
-    help="BigQuery Table Id",
+    help="BigQuery Table Id as a fully qualifed name: 'project.dataset.table'",
 )
 @click.option(
     "--data", type=click.File("rb"), required=True, help="Data to import in CSV format"
 )
-def upload(ctx, project_id, dataset_id, table_id, data):
+def upload(ctx, table_id, data):
     client = ctx.obj["BigQueryClient"]
+    project_id, dataset_id, table_id = table_id.split(".")
 
     dataset = bigquery.Dataset(f"{project_id}.{dataset_id}")
     dataset.location = "US"
 
     # Raises google.api_core.exceptions.Conflict if the Dataset exists.
     try:
-        dataset = client.create_dataset(dataset, timeout=30)  # Make an API request.
+        dataset = client.create_dataset(dataset, timeout=30)
     except Conflict:
-        print("Dataset already exists.")
         pass
 
     job_config = bigquery.LoadJobConfig(
@@ -77,40 +65,20 @@ def upload(ctx, project_id, dataset_id, table_id, data):
     resource = f"{project_id}.{dataset_id}.{table_id}"
     job = client.load_table_from_file(data, resource, job_config=job_config)
     job.result()
-    table = client.get_table(resource)
-
-    print(
-        "Loaded {} rows and {} columns to {}".format(
-            table.num_rows, len(table.schema), resource
-        )
-    )
 
 
 @cli.command()
 @click.pass_context
 @click.option(
-    "--project-id",
-    type=str,
-    required=True,
-    help="BigQuery Project Id",
-)
-@click.option(
-    "--dataset-id",
-    type=str,
-    required=True,
-    help="BigQuery Dataset Id" "--table_id",
-)
-@click.option(
     "--table-id",
     type=str,
     required=True,
-    help="BigQuery Table Id",
+    help="BigQuery Table Id as a fully qualifed name: 'project.dataset.table'",
 )
-def delete(ctx, project_id, dataset_id, table_id):
+def delete(ctx, table_id):
     client = ctx.obj["BigQueryClient"]
-    fqp = f"{project_id}.{dataset_id}.{table_id}"
-    client.delete_table(fqp, not_found_ok=True)  # Make an API request.
-    print(f"Deleted table '{fqp}'")
+    client.delete_table(table_id, not_found_ok=True)
+    print(f"Deleted table '{table_id}'")
 
 
 cli()
