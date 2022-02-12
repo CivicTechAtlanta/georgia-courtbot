@@ -1,6 +1,6 @@
 import click
-import data.dekalb_scraper
-import bigquery.commands
+import scraper.data.dekalb_scraper
+import scraper.bigquery.commands
 
 
 @click.group()
@@ -21,7 +21,7 @@ def cli():
     help="How many days of data to scrape, measured from today. Default is 90 days.",
 )
 def scrape(output, days):
-    data.dekalb_scraper.run(output, days)
+    scraper.data.dekalb_scraper.run(output, days)
 
 
 @cli.command()
@@ -41,7 +41,7 @@ def scrape(output, days):
     "--data", type=click.File("rb"), required=True, help="Data to import in CSV format"
 )
 def upload(key_path, table_id, data):
-    bigquery.commands.upload(key_path, table_id, data)
+    scraper.bigquery.commands.upload(key_path, table_id, data)
 
 
 cli()
