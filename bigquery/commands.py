@@ -19,32 +19,8 @@ def Client(key_path):
         return bigquery.Client()
 
 
-@click.group()
-@click.pass_context
-@click.option(
-    "--key-path",
-    type=click.Path(exists=True),
-    required=False,
-    help="Google API service account credential file",
-)
-def cli(ctx, key_path):
-    ctx.ensure_object(dict)
-    ctx.obj["BigQueryClient"] = Client(key_path)
-
-
-@cli.command()
-@click.pass_context
-@click.option(
-    "--table-id",
-    type=str,
-    required=True,
-    help="BigQuery Table Id as a fully qualifed name: 'project.dataset.table'",
-)
-@click.option(
-    "--data", type=click.File("rb"), required=True, help="Data to import in CSV format"
-)
-def upload(ctx, table_id, data):
-    client = ctx.obj["BigQueryClient"]
+def upload(key_path, table_id, data):
+    client = Client(key_path)
     project_id, dataset_id, table_id = table_id.split(".")
 
     dataset = bigquery.Dataset(f"{project_id}.{dataset_id}")
@@ -67,18 +43,7 @@ def upload(ctx, table_id, data):
     job.result()
 
 
-@cli.command()
-@click.pass_context
-@click.option(
-    "--table-id",
-    type=str,
-    required=True,
-    help="BigQuery Table Id as a fully qualifed name: 'project.dataset.table'",
-)
 def delete(ctx, table_id):
     client = ctx.obj["BigQueryClient"]
     client.delete_table(table_id, not_found_ok=True)
     print(f"Deleted table '{table_id}'")
-
-
-cli()
