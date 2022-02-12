@@ -1,4 +1,3 @@
-import click
 import datetime
 import requests
 import json
@@ -161,22 +160,7 @@ def report(results, output_format):
         log(f"Unknown output format: '{output_format}'!")
 
 
-@click.command()
-@click.option(
-    "--output",
-    type=click.Choice(["csv", "json"]),
-    help="Format to use when reporting scraped data.",
-)
-@click.option(
-    "--days",
-    type=int,
-    default=90,
-    help="How many days of data to scrape, measured from today. Default is 90 days.",
-)
 def run(output, days):
     results = scrape(days=days)
     validate(results)
     report(results, output_format=output)
-
-
-run()
