@@ -24,18 +24,34 @@ class TestScraperMethods(TestCase):
 
     @mock.patch.object(Session, "get")
     def test_get_all_judicial_officers(self, mock_get):
-        mock_resp = mock.Mock()
-        mock_resp.status_code = 200
-        mock_resp.content = read_testdata("26.html")
-        mock_get.return_value = mock_resp
+        mock_get.return_value = mock.Mock(
+            status_code=200, content=read_testdata("26.html")
+        )
         scraper = data.dekalb_scraper.Scraper()
         scraper.close_session()
         got = [x for x in scraper.get_all_judicial_officers()]
         expected = json.loads(read_testdata("output.json"))
         self.assertCountEqual(got, expected)
 
-    """
     @mock.patch.object(Session, "post")
-    def search_by_judicial_officer(self, mock_post):
-        gt
-        """
+    def test_search_by_judicial_officer(self, mock_post):
+        scraper = data.dekalb_scraper.Scraper()
+        scraper.search_by_judicial_officer(
+            "judge_named", datetime.datetime(2021, 1, 1), datetime.datetime(2021, 5, 1)
+        )
+        mock_post.assert_called_with(
+            "https://ody.dekalbcountyga.gov/portal/Hearing/SearchHearings/HearingSearch",
+            data={
+                "PortletName": "HearingSearch",
+                "Settings.CaptchaEnabled": "False",
+                "Settings.DefaultLocation": "All Courts",
+                "SearchCriteria.SelectedCourt": "All Courts",
+                "SearchCriteria.SelectedHearingType": "All Hearings",
+                "SearchCriteria.SearchByType": "JudicialOfficer",
+                "SearchCriteria.SelectedJudicialOfficer": "judge_named",
+                "SearchCriteria.DateFrom": "01/01/2021",
+                "SearchCriteria.DateTo": "05/01/2021",
+            },
+            headers={"User-Agent": "CodeForAtlanta Court Bot"},
+        )
+        scraper.close_session()
