@@ -1,5 +1,5 @@
+import datetime
 from unittest import TestCase, mock
-from pathlib import Path
 import os
 import json
 from requests import Session
@@ -13,6 +13,15 @@ def read_testdata(named):
 
 
 class TestScraperMethods(TestCase):
+    def test_hearing_date_to_datetime(self):
+        got = data.dekalb_scraper.datetime_to_hearing_date(datetime.date(2007, 12, 5))
+        self.assertEqual(got, "12/05/2007")
+
+    def test_datetime_to_hearing_date(self):
+        got = data.dekalb_scraper.hearing_date_to_datetime("12/15/2007")
+        expected = datetime.datetime(2007, 12, 15)
+        self.assertEqual(got, expected)
+
     @mock.patch.object(Session, "get")
     def test_get_all_judicial_officers(self, mock_get):
         mock_resp = mock.Mock()
@@ -24,3 +33,9 @@ class TestScraperMethods(TestCase):
         got = [x for x in scraper.get_all_judicial_officers()]
         expected = json.loads(read_testdata("output.json"))
         self.assertCountEqual(got, expected)
+
+    """
+    @mock.patch.object(Session, "post")
+    def search_by_judicial_officer(self, mock_post):
+        gt
+        """

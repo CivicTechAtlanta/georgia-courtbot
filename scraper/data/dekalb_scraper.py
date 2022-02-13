@@ -28,7 +28,7 @@ class Scraper:
 
         return filter(lambda e: e["name"] != "", result)
 
-    def submit_search_by_judicial_officer(self, name, date_from, date_to):
+    def search_by_judicial_officer(self, name, date_from, date_to):
         url = (
             "https://ody.dekalbcountyga.gov/portal/Hearing/SearchHearings/HearingSearch"
         )
@@ -69,7 +69,7 @@ class Scraper:
         return json.loads(response.content)
 
     def get_cases_by_judicial_officer(self, officer, date_from, date_to):
-        self.submit_search_by_judicial_officer(officer["id"], date_from, date_to)
+        self.search_by_judicial_officer(officer["id"], date_from, date_to)
         response = self.get_search_result()
         cases = response["Data"]
         if response["MaxResultsHit"] == True:
