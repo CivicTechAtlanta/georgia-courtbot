@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html class="no-js asp-no-fluid-layout" dir="ltr" lang="en-US">
+  <head>
+    <meta charset="UTF-8" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=10,chrome=1" />
+
+    <title>Search Hearings - DeKalb County - Judicial Information System</title>
+
+    <!-- mobile optimized -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+    <!-- allow pinned sites -->
+    <meta name="application-name" content="Odyssey Portal" />
+
+    <!-- Favicon -->
+    <link href="/portal/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+    <link
+      rel="apple-touch-icon-precomposed"
+      sizes="144x144"
+      href="/portal/Content/tylerui/images/apple-touch-icon-144x144-precomposed.png"
+    />
+
+    <link
+      rel="apple-touch-icon-precomposed"
+      sizes="114x114"
+      href="/portal/Content/tylerui/images/apple-touch-icon-114x114-precomposed.png"
+    />
+
+    <link
+      rel="apple-touch-icon-precomposed"
+      sizes="72x72"
+      href="/portal/Content/tylerui/images/apple-touch-icon-72x72-precomposed.png"
+    />
+
+    <link
+      rel="apple-touch-icon-precomposed"
+      href="/portal/Content/tylerui/images/apple-touch-icon-precomposed.png"
+    />
+
+    <script>
+      window.odyPortal = window.odyPortal || {};
+      window.odyPortal.sessionInfo = {
+        pageLoadTime: new Date().getTime(),
+      };
+      var usePersonaCaseSummary = "False" == "True" ? true : false;
+    </script>
+
+    <!-- Plugin Styles -->
+
+    <link
+      href="/portal/Content/PortalReset.css?v=HD3euui7n1lxavx56-Rd62SNCgtVTbp1sCISDUiiG1Y1"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="/portal/Content/tylerui/tylerui-browser-requirements.css"
+    />
+    <!-- Bundled Content -->
+
+    <!-- ModernizrDefunctr JS -->
+    <script src="/portal/bundles/ModernizrDefunctr?v=3BC6zM2_o9Xw5CKmkDTIn-sTFHSO-9JROdFmqORHGbg1"></script>
+
+    <!-- TylerUI CSS -->
+    <link
+      href="/portal/bundles/TylerUiCss?v=HaFLpC-bnEuySVP9Yl7fjBUhPmqDNrPTtNg5ETxYNak1"
+      rel="stylesheet"
+    />
+
+    <!-- Kendo CSS -->
+    <link
+      href="/portal/Content/external/telerik/kendo/kendo.css?v=bzDcF29RRoChnTfBlWURSAWwZYCnKtnPd1nO9Jfp5ec1"
+      rel="stylesheet"
+    />
+
+    <!-- Main CSS -->
+    <link
+      href="/portal/Content/main.css?v=jfT_CCWKw270xaGbo36poVJe69meP_wJNW2JavVslO01"
+      rel="stylesheet"
+    />
+
+    <!-- Print CSS -->
+    <link
+      href="/portal/Content/print.css?v=_hW1boXuxZ3OXNXlcQ9b5v2BQnQwFjXcNWRG53y8mds1"
+      rel="stylesheet"
+      type="text/css"
+      media="print"
+    />
+
+    <script src="/portal/bundles/TylerUiJs?v=INAW8YK3Ll-gwPl67-zOt0LcCuahWQUMOGE0j8o03Es1"></script>
+
+    <script src="/portal/Scripts/ePortal/main.js?v=gKqAkI4gIfQQXvq8ZX4JVjcH_S7aJokj1BpAGBfqgXQ1"></script>
+
+    <script src="/portal/Scripts/ePortal/ePortal.js?v=NVWkfvyy5YDmkK3HuwzEsRYmt3A5sRIKIfZPeR66Mq81"></script>
+
+    <script type="text/javascript">
+      //The base URL of Portal
+      window.applicationBaseUrl = "https://ody.dekalbcountyga.gov/portal/";
+      window.userIsAuthenticated = "False" === "True" ? true : false;
+      window.virtualDirectory = "/portal";
+      window.resolveWebIntentDirectoryURI =
+        "/portal/ResolveWebIntent/GetIntentList";
+    </script>
+  </head>
+
+  <body data-spy="scroll" data-target="#mysidebar">
+    <!-- center for IE9 since it ignores bootstrap 3 -->
+    <center>
+      <!-- use noscript and also keep outside of controller to avoid flash in Safari and IE (can't use ng-cloak because there is no js it won't uncloak-->
+      <noscript>
+        <div class="nojs-content">
+          <h2>
+            JavaScript must be enabled in order for you to use this application.
+          </h2>
+          <p>
+            However, it seems JavaScript is either disabled or not supported by
+            your browser.
+          </p>
+          <p>
+            To use this application, enable JavaScript by changing your browser
+            options, then try again.
+          </p>
+        </div>
+      </noscript>
+
+      <div class="nocookies-content">
+        <h2>Cookies must be allowed.</h2>
+        <p>
+          Your browser is currently set to block cookies. Your browser must
+          allow cookies before you can use this application.
+        </p>
+        <p>
+          Cookies are small text files stored on your computer that tell this
+          application when you're signed in. To learn how to allow cookies, see
+          online help in your web browser.
+        </p>
+      </div>
+
+      <div class="unsupported-browser center-block">
+        <h2>
+          You are using a web browser which this application no longer supports.
+        </h2>
+
+        <p>
+          We support the current and previous major releases of Google Chrome,
+          Firefox, Internet Explorer, and Safari on a rolling basis. Each time a
+          new version is released, we begin supporting that version and stop
+          supporting the third most recent version.
+        </p>
+
+        <h2>Supported Browsers</h2>
+        <div class="row">
+          <div class="col-md-3 col-sm-6 text-center">
+            <div>Chrome for Business</div>
+            <div>
+              <a href="http://www.google.com/intl/en/chrome/business/browser/">
+                <img
+                  src="/portal/Content/tylerui/images/browsers/chrome_64x64.png"
+                  alt="Google Chrome"
+                />
+              </a>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 text-center">
+            <div>Firefox</div>
+            <div>
+              <a href="http://www.getfirefox.com/">
+                <img
+                  src="/portal/Content/tylerui/images/browsers/firefox_64x64.png"
+                  alt="Mozilla Firefox"
+                />
+              </a>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 text-center">
+            <div>Internet Explorer</div>
+            <div>
+              <a
+                href="http://windows.microsoft.com/en-us/internet-explorer/download-ie"
+              >
+                <img
+                  src="/portal/Content/tylerui/images/browsers/internet-explorer_64x64.png"
+                  alt="Microsoft Internet Explorer"
+                />
+              </a>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 text-center">
+            <div>Apple Safari</div>
+            <div>
+              <a href="http://www.apple.com/safari/">
+                <img
+                  src="/portal/Content/tylerui/images/browsers/safari_64x64.png"
+                  alt="Apple Safari"
+                />
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <p>
+          <b> Internet Explorer 9 Users </b>
+          Internet Explorer 11 launched on October 17, 2013, and as a result,
+          we've discontinued support for Internet Explorer 9.
+        </p>
+
+        <p>
+          Organizations that depend on old versions of Internet Explorer may
+          want to consider a dual browser strategy.
+        </p>
+      </div>
+    </center>
+
+    <omnibar id="omnibar" class="">
+      <div
+        class="row"
+        style="
+          background-color: transparent;
+          height: 0px;
+
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-position: left;
+          width: 1920px;
+        "
+      >
+        <div class="col-md-12"></div>
+      </div>
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <brand class="navbar-brand">
+              <a href="/portal/">
+                <img
+                  src="/portal/Theme/images/logo.png?v=637395240006345082"
+                  alt="site logo"
+                  class="pull-left"
+                  style="height: 36px; width: 36px"
+                />
+                <div style="width: 100%; padding-left: 4.5rem; margin-top: 7px">
+                  <div class="product">
+                    DeKalb County - Judicial Information System
+                  </div>
+                </div>
+              </a>
+            </brand>
+          </div>
+          <div id="navbar" class="hidden-xs pull-right">
+            <div class="dropdown" style="margin-top: 15px">
+              <button
+                class="dropdown-toggle btn btn-default login-btn"
+                data-toggle="dropdown"
+                aria-expandable="false"
+                id="dropdownMenu1"
+                style="cursor: pointer"
+              >
+                Register / Sign In
+                <span class="fa fa-user fa-fw"></span>
+                <span class="caret"></span>
+              </button>
+              <ul
+                class="dropdown-menu"
+                role="menu"
+                aria-labelledby="dropdownMenu1"
+              >
+                <li role="presentation">
+                  <a href="/portal/Account/Register">Register</a>
+                </li>
+                <li role="presentation">
+                  <a href="/portal/Account/Login">Sign In</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!--/.nav-collapse -->
+          <div id="navbar" class="hidden-lg hidden-md hidden-sm">
+            <div class="dropdown" style="margin-top: 15px">
+              <button
+                class="dropdown-toggle btn btn-default login-btn"
+                data-toggle="dropdown"
+                aria-expandable="false"
+                id="dropdownMenu1"
+                style="cursor: pointer"
+              >
+                Register / Sign In
+                <span class="fa fa-user fa-fw"></span>
+                <span class="caret"></span>
+              </button>
+              <ul
+                class="dropdown-menu"
+                role="menu"
+                aria-labelledby="dropdownMenu1"
+              >
+                <li role="presentation">
+                  <a href="/portal/Account/Register">Register</a>
+                </li>
+                <li role="presentation">
+                  <a href="/portal/Account/Login">Sign In</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!--/.container-fluid -->
+      </nav>
+      <div
+        class="row"
+        style="
+          background-color: #40528f;
+          height: 30px;
+          margin-top: -20px;
+          margin-bottom: 20px;
+        "
+      >
+        <div class="col-md-12"></div>
+      </div>
+    </omnibar>
+
+    <div
+      id="main"
+      class="container page"
+      style="min-height: 850px; margin-top: 60px"
+    >
+      <div class="hidden-lg hidden-md hidden-sm" style="height: 55px"></div>
+
+      <div class="container">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- BEGIN _PortletZone\Index.cshtml BEGIN -->
+            <div class="section">
+              <div role="main" class="panel panel-default">
+                <div class="panel-body">
+                  <div class="row">
+                    <h1 class="col-md-10 col-sm-9">Search Hearings</h1>
+                    <h2 class="col-md-2 col-sm-3 required-indicator-key">
+                      * Required
+                    </h2>
+                  </div>
+
+                  <!-- /end div.portlet-header -->
+
+                  <div class="portlet-body">
+                    <script src="/portal/Scripts/ePortal/portlets/hearingSearchPortlet.js?v=TsDXNHRtM_FHarqPskSMV80K1FLWwxAOBnl1Diskgog1"></script>
+
+                    <script src="https://www.google.com/recaptcha/api.js"></script>
+
+                    <script>
+                      var ensureFloatingLabel = function (selector) {
+                        if (
+                          selector &&
+                          selector.val() &&
+                          selector.val().length > 0
+                        ) {
+                          selector.next().addClass("stay");
+                        }
+                      };
+
+                      $(function () {
+                        HearingSearchPortlet.init();
+                        TabControl.TabRenderComplete($("#frmHS"), true);
+
+                        // OWA-1896: Some floating labels "sink" when they should not.
+                        ensureFloatingLabel($("#selHSJudicialOfficer"));
+                        ensureFloatingLabel($("#selHSCourtroom"));
+                      });
+                    </script>
+                    <script id="settingsViewModelJSON" type="application/json">
+                      {
+                        "MaximumSearchDays": -1,
+                        "CaptchaEnabled": false,
+                        "MagistrateEnabled": false,
+                        "DefaultLocation": "All Courts",
+                        "DisableWildcardCase": false,
+                        "DisallowSearchingPriorCurrentDate": false
+                      }
+                    </script>
+
+                    <form
+                      action="/portal/Hearing/SearchHearings/HearingSearch"
+                      class="HearingSearchPortlet"
+                      id="frmHS"
+                      method="post"
+                    >
+                      <input
+                        id="PortletName"
+                        name="PortletName"
+                        type="hidden"
+                        value="HearingSearch"
+                      /><input
+                        data-val="true"
+                        data-val-required="The Captcha Enabled field is required."
+                        id="Settings_CaptchaEnabled"
+                        name="Settings.CaptchaEnabled"
+                        type="hidden"
+                        value="False"
+                      /><input
+                        data-val="true"
+                        data-val-required="The Default Location field is required."
+                        id="Settings_DefaultLocation"
+                        name="Settings.DefaultLocation"
+                        type="hidden"
+                        value="All Courts"
+                      />
+                      <div class="row">
+                        <div
+                          class="validation-summary-valid col-md-12"
+                          data-valmsg-summary="true"
+                        >
+                          <span
+                            >One or more fields was completed incorrectly:</span
+                          >
+                          <ul style="text-indent: 2.5em"></ul>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-sm-12">
+                        <h2>
+                          <span style="float: left">Basic Search Options</span>
+                        </h2>
+                      </div>
+                      <div class="col-md-12 col-sm-12">
+                        <fieldset>
+                          <select
+                            class="form-control"
+                            data-val="true"
+                            data-val-required="Court location is required"
+                            id="cboHSLocationGroup"
+                            name="SearchCriteria.SelectedCourt"
+                          >
+                            <option value=""></option>
+                            <option selected="selected" value="All Courts">
+                              All Courts
+                            </option>
+                            <option value="DeKalb State and Magistrate Courts">
+                              DeKalb State and Magistrate Courts
+                            </option>
+                            <option value="DeKalb Superior Courts">
+                              DeKalb Superior Courts
+                            </option></select
+                          ><label
+                            for="cboHSLocationGroup"
+                            class=" "
+                            style="position: absolute"
+                            >* Select Location</label
+                          >
+                        </fieldset>
+
+                        <span
+                          class="field-validation-valid"
+                          data-valmsg-for="SearchCriteria.SelectedCourt"
+                          data-valmsg-replace="false"
+                          data-valmsg-icon="true"
+                        >
+                          <div class="error-icon"></div>
+                        </span>
+                      </div>
+                      <div class="col-md-12 col-sm-12">
+                        <fieldset>
+                          <legend></legend>
+                          <select
+                            class="form-control"
+                            data-val="true"
+                            data-val-required="Hearing type is required field"
+                            id="cboHSHearingTypeGroup"
+                            name="SearchCriteria.SelectedHearingType"
+                          >
+                            <option value="All Hearings" parent="All Courts">
+                              All Hearings
+                            </option>
+                            <option
+                              value="All State and Magistrate Courts"
+                              parent="DeKalb State and Magistrate Courts"
+                            >
+                              All State and Magistrate Courts
+                            </option>
+                            <option
+                              value="All Superior Court Hearings"
+                              parent="DeKalb Superior Courts"
+                            >
+                              All Superior Court Hearings
+                            </option>
+                          </select>
+                          <label
+                            for="cboHSHearingTypeGroup"
+                            style="position: absolute"
+                            >* Select Hearing Types</label
+                          >
+                        </fieldset>
+                      </div>
+                      <div class="col-md-12 col-sm-12" id="searchByDiv">
+                        <fieldset>
+                          <legend></legend>
+                          <select
+                            data-val="true"
+                            data-val-required="Search type is a required field"
+                            id="cboHSSearchBy"
+                            name="SearchCriteria.SearchByType"
+                            class="valid form-control"
+                          >
+                            <option value=""></option>
+                            <option value="CaseNumber">Case Number</option>
+                            <option
+                              value="PartyName"
+                              data-name-type="true"
+                              data-soundex="true"
+                            >
+                              Party Name
+                            </option>
+                            <option value="BusinessName" data-soundex="true">
+                              Business Name
+                            </option>
+                            <option
+                              value="AttorneyName"
+                              data-name-type="true"
+                              data-soundex="true"
+                            >
+                              Attorney Name
+                            </option>
+                            <option value="AttorneyBarNumber">
+                              Attorney Bar Number
+                            </option>
+                            <option
+                              value="JudicialOfficer"
+                              data-judicialofficer="true"
+                            >
+                              Judicial Officer
+                            </option>
+                            <option value="Courtroom" data-courtroom="true">
+                              Courtroom
+                            </option>
+                          </select>
+                          <label for="cboHSSearchBy" style="position: absolute"
+                            >* Select Search Types</label
+                          >
+                        </fieldset>
+                      </div>
+                      <div
+                        class="col-md-12 col-sm-12"
+                        id="sounds-like-container"
+                      >
+                        <div class="form-check-box">
+                          <input
+                            data-val="true"
+                            data-val-required="The Soundex field is required."
+                            id="SearchCriteria_Soundex"
+                            name="SearchCriteria.Soundex"
+                            tabindex="0"
+                            type="checkbox"
+                            value="true"
+                          /><input
+                            name="SearchCriteria.Soundex"
+                            type="hidden"
+                            value="false"
+                          /><span class="ClickThroughIE"></span
+                          ><label class="ClickThroughIE">Sounds Like</label>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-sm-12" id="seachValueDiv">
+                        <fieldset>
+                          <input
+                            class="form-control"
+                            data-val="true"
+                            data-val-generalvailidation="To perform a wildcard search for case numbers, use a minimum of 4 characters followed by an asterisk"
+                            data-val-generalvailidation-name="System.Web.Mvc.ViewContext"
+                            data-val-length="Please enter a value for search criteria 100 characters or less."
+                            data-val-length-max="100"
+                            data-val-searchcriteriarequired="Search Criteria is required"
+                            data-val-searchcriteriarequired-acceptablecasetypes="CaseNumber,CrossRefNumber"
+                            data-val-searchcriteriarequired-searchbyddselector="cboHSSearchBy"
+                            data-val-wildcard="To perform a wildcard search for case numbers, use a minimum of 4 characters followed by an asterisk"
+                            data-val-wildcard-name="System.Web.Mvc.ViewContext"
+                            id="SearchCriteria_SearchValue"
+                            maxLength="100"
+                            name="SearchCriteria.SearchValue"
+                            tabindex="0"
+                            type="text"
+                            value=""
+                          /><label for="SearchCriteria_SearchValue"
+                            >* Search by Criteria</label
+                          >
+                        </fieldset>
+                      </div>
+                      <div
+                        class="col-md-12 col-sm-12"
+                        id="seachValueAttorneyNumberDiv"
+                      >
+                        <fieldset>
+                          <input
+                            class="form-control"
+                            data-val="true"
+                            data-val-length="Please enter an Attorney Number that is 100 characters or less."
+                            data-val-length-max="100"
+                            data-val-searchcriteriarequired="Search Criteria is required"
+                            data-val-searchcriteriarequired-acceptablecasetypes="AttorneyBarNumber"
+                            data-val-searchcriteriarequired-searchbyddselector="cboHSSearchBy"
+                            data-val-wildcard="Wildcards cannot be used with this search type"
+                            data-val-wildcard-name="System.Web.Mvc.ViewContext"
+                            id="SearchCriteria_SearchAttorneyNumber"
+                            maxLength="100"
+                            name="SearchCriteria.SearchAttorneyNumber"
+                            tabindex="0"
+                            type="text"
+                            value=""
+                          /><label for="SearchCriteria_SearchAttorneyNumber"
+                            >* Search by Criteria</label
+                          >
+                        </fieldset>
+                      </div>
+                      <div
+                        class="col-md-12 col-sm-12"
+                        id="lastNameDiv"
+                        style="display: none"
+                      >
+                        <fieldset>
+                          <input
+                            class="form-control"
+                            data-val="true"
+                            data-val-generalvailidation="Last Name or Business Name must be at least 1 letter, or 3 letters followed by an optional asterisk. Names can include a space, hyphen, or apostrophe."
+                            data-val-generalvailidation-name="System.Web.Mvc.ViewContext"
+                            data-val-length="Please enter a Last Name or Business Name that is 100 characters or less."
+                            data-val-length-max="100"
+                            data-val-searchcriteriarequired="Last Name is required"
+                            data-val-searchcriteriarequired-acceptablecasetypes="PartyName,AttorneyName,BusinessName"
+                            data-val-searchcriteriarequired-searchbyddselector="cboHSSearchBy"
+                            data-val-wildcard="Wildcards cannot be used with Sounds Like selected"
+                            data-val-wildcard-name="System.Web.Mvc.ViewContext"
+                            id="txtHSLastName"
+                            maxLength="100"
+                            name="SearchCriteria.LastNameValue"
+                            tabindex="0"
+                            type="text"
+                            value=""
+                          /><label for="txtHSLastName">* Last Name</label>
+                        </fieldset>
+                      </div>
+                      <div
+                        class="col-md-12 col-sm-12"
+                        id="firstNameDiv"
+                        style="display: none"
+                      >
+                        <fieldset>
+                          <input
+                            class="form-control"
+                            data-val="true"
+                            data-val-generalvailidation="First name field must be at least 1 letter, followed by an optional asterisk.  Names can include a space, hyphen, or apostrophe."
+                            data-val-generalvailidation-name="System.Web.Mvc.ViewContext"
+                            data-val-length="Please enter a First Name that is 100 characters or less."
+                            data-val-length-max="100"
+                            data-val-searchcriteriarequired="First Name is required"
+                            data-val-searchcriteriarequired-acceptablecasetypes="PartyName,AttorneyName"
+                            data-val-searchcriteriarequired-searchbyddselector="cboHSSearchBy"
+                            data-val-wildcard="Wildcards cannot be used with Sounds Like selected"
+                            data-val-wildcard-name="System.Web.Mvc.ViewContext"
+                            id="txtHSFirstName"
+                            maxLength="100"
+                            name="SearchCriteria.FirstNameValue"
+                            tabindex="0"
+                            type="text"
+                            value=""
+                          /><label for="txtHSFirstName">* First Name</label>
+                        </fieldset>
+                      </div>
+                      <div
+                        class="col-md-12 col-sm-12"
+                        id="middleNameDiv"
+                        style="display: none"
+                      >
+                        <fieldset>
+                          <input
+                            class="form-control"
+                            data-val="true"
+                            data-val-generalvailidation="MiddleNameErrors!!"
+                            data-val-generalvailidation-name="System.Web.Mvc.ViewContext"
+                            data-val-length="Please enter a a Middle Name that is 100 characters or less."
+                            data-val-length-max="100"
+                            data-val-wildcard="Wildcards cannot be used with Sounds Like selected"
+                            data-val-wildcard-name="System.Web.Mvc.ViewContext"
+                            id="txtHSMiddleName"
+                            maxLength="100"
+                            name="SearchCriteria.MiddleNameValue"
+                            tabindex="0"
+                            type="text"
+                            value=""
+                          /><label for="txtHSMiddleName">Middle Name</label>
+                        </fieldset>
+                      </div>
+                      <div
+                        class="col-md-12 col-sm-12"
+                        id="judicialOfficerDiv"
+                        style="display: none"
+                      >
+                        <fieldset>
+                          <legend></legend>
+                          <select
+                            data-val="true"
+                            data-val-required="Judicial Officer is a required field"
+                            id="selHSJudicialOfficer"
+                            name="SearchCriteria.SelectedJudicialOfficer"
+                            class="valid form-control"
+                          >
+                            <option value=""></option>
+                            <option value="282">Adams, Gregory A.</option>
+                            <option value="40338">Alexander, Kimberly A</option>
+                            <option value="284">Anderson, Berryl A</option>
+                            <option value="40337">Anderson, Kimberly</option>
+                            <option value="40439">Axam, Cinque M</option>
+                            <option value="42574">Bailey, Charles E</option>
+                            <option value="286">Barrie, Tangela</option>
+                            <option value="41989">
+                              Benjamin-Powell, Keisha, Esquire
+                            </option>
+                            <option value="288">Bethel, Winston P</option>
+                            <option value="290">Boulee, J. P.</option>
+                            <option value="14665">Bratton-Haynes, Linda</option>
+                            <option value="13792">Case, No Billed</option>
+                            <option value="293">Cash, Mary M.</option>
+                            <option value="297">Castellani, Robert J.</option>
+                            <option value="300">Coursey, Daniel M., Jr.</option>
+                            <option value="14644">Crawford, Vincent C</option>
+                            <option value="555">DA, Decline</option>
+                            <option value="42486">Davis, Anna</option>
+                            <option value="41618">Davis, Joshua G</option>
+                            <option value="39977">Davis-Baugh, Roshonda</option>
+                            <option value="39378">Dear Jackson, LaTisha</option>
+                            <option value="40438">Edgerton, K Tyler</option>
+                            <option value="14359">El-Amin, Fatima</option>
+                            <option value="36051">El-Amin, Fatima</option>
+                            <option value="304">Flake, Gail C.</option>
+                            <option value="306">Foxworth, Richard C.</option>
+                            <option value="36091">Freeman, J Caroline</option>
+                            <option value="33492">Fuller, Hilton M.</option>
+                            <option value="36092">Grayson, Janet</option>
+                            <option value="314">Guy, September</option>
+                            <option value="317">Haddad, Juwayn</option>
+                            <option value="318">Hancock, Michael E.</option>
+                            <option value="34011">Hargrove, Bedelia C</option>
+                            <option value="319">Harvey, Alan C.</option>
+                            <option value="42084">Heard, DeNorris A.</option>
+                            <option value="320">Hunter, Linda W.</option>
+                            <option value="321">Hydrick, Stacey K.</option>
+                            <option value="322">Indermark, Howard W.</option>
+                            <option value="323">Jackson, Asha F.</option>
+                            <option value="324">Jacobs, Mike</option>
+                            <option value="325">Jason, Claire B.</option>
+                            <option value="326">Johnson, Courtney L.</option>
+                            <option value="327">Jones, Lindsay RM</option>
+                            <option value="41503">Judge, Unassigned LOA</option>
+                            <option value="40454">Judge, Unassigned MA</option>
+                            <option value="42488">Judge, Unassigned MPR</option>
+                            <option value="40457">Judge, Unassigned TN</option>
+                            <option value="42487">Kleinrock, Lynn</option>
+                            <option value="38410">Koehler, Christine A</option>
+                            <option value="283">Leshaw, Gary</option>
+                            <option value="287">Manheimer, Hollie</option>
+                            <option value="42575">Martinez, Ana Maria</option>
+                            <option value="289">McCoyd, Matthew J</option>
+                            <option value="36050">McLaughlin, Jack</option>
+                            <option value="33313">McMullin, Ruth</option>
+                            <option value="39976">McNeal, Shannon</option>
+                            <option value="291">Miller, Curtis W</option>
+                            <option value="13927">Morris, Shondeana C</option>
+                            <option value="42010">
+                              Murrell, Mercedes, Esquire
+                            </option>
+                            <option value="40672">Murry, Temika</option>
+                            <option value="38411">Neal, Joyce L</option>
+                            <option value="24667">Out of County, Judge</option>
+                            <option value="292">Panos, Johnny</option>
+                            <option value="41614">
+                              Parker-Smith, Yolanda C.
+                            </option>
+                            <option value="36052">
+                              Peagler, Desiree Sutton
+                            </option>
+                            <option value="294">Polk, Nora</option>
+                            <option value="295">Presiding, Judge</option>
+                            <option value="296">Purdom, Wayne M</option>
+                            <option value="13929">Ramsey, Ronald, Sr.</option>
+                            <option value="36053">Robins, Mathew</option>
+                            <option value="32588">Rosh, Jeryl</option>
+                            <option value="13926">Ross, Brian K</option>
+                            <option value="298">Sacks, Albert R</option>
+                            <option value="299">Scott, Mark Anthony</option>
+                            <option value="301">Scott, Sabrina</option>
+                            <option value="305">SENIOR PRESIDING, JUDGE</option>
+                            <option value="307">Sitting, Judge</option>
+                            <option value="36095">Spears, John</option>
+                            <option value="309">Stephens, Corneill R</option>
+                            <option value="13928">Storey, Kiesha R</option>
+                            <option value="310">Stroud, Rhathelia</option>
+                            <option value="42009">
+                              Success, Aisha, Esquire
+                            </option>
+                            <option value="312">Taylor, Abbi S</option>
+                            <option value="313">Williams, Phyllis R</option>
+                            <option value="38600">Wolk, Kelli</option>
+                            <option value="315">Wong, Alvin T</option>
+                            <option value="316">Wood, Charles D</option>
+                          </select>
+                          <label
+                            for="selHSJudicialOfficer"
+                            style="position: absolute"
+                            >* Select Judicial Officer</label
+                          >
+                        </fieldset>
+                      </div>
+                      <input
+                        type="hidden"
+                        value="0"
+                        id="HSPrevSelectedJudicialOfficer"
+                      />
+                      <div
+                        class="col-md-12 col-sm-12"
+                        id="courtRoomDiv"
+                        style="display: none"
+                      >
+                        <fieldset>
+                          <legend></legend>
+                          <select
+                            data-val="true"
+                            data-val-required="Courtroom is a required field"
+                            id="selHSCourtroom"
+                            name="SearchCriteria.SelectedCourtRoom"
+                            class="valid form-control"
+                          >
+                            <option value=""></option>
+                            <option value="1531">Conversion Location</option>
+                            <option value="961">Courtroom 1200 C</option>
+                            <option value="962">Courtroom 1200 D</option>
+                            <option value="964">Courtroom 2A</option>
+                            <option value="965">Courtroom 2B</option>
+                            <option value="966">Courtroom 2C</option>
+                            <option value="967">Courtroom 2D</option>
+                            <option value="969">Courtroom 3B</option>
+                            <option value="970">Courtroom 3C</option>
+                            <option value="971">Courtroom 3D</option>
+                            <option value="972">Courtroom 4B</option>
+                            <option value="1537">Courtroom 5B</option>
+                            <option value="1541">Courtroom 5C</option>
+                            <option value="1545">Courtroom 5D</option>
+                            <option value="1551">Courtroom 6A</option>
+                            <option value="1553">Courtroom 6B</option>
+                            <option value="1555">Courtroom 6C</option>
+                            <option value="1560">Courtroom 6D</option>
+                            <option value="1564">Courtroom 7A</option>
+                            <option value="1569">Courtroom 7B</option>
+                            <option value="1570">Courtroom 7C</option>
+                            <option value="1582">Courtroom 7D</option>
+                            <option value="38499">DeKalb Medical</option>
+                            <option value="41480">
+                              Dispossessory Virtual CT1
+                            </option>
+                            <option value="41481">
+                              Dispossessory Virtual CT2
+                            </option>
+                            <option value="41482">
+                              Dispossessory Virtual CT3
+                            </option>
+                            <option value="38495">
+                              Georgia Regional Hospital
+                            </option>
+                            <option value="1583">Grand Jury Room</option>
+                            <option value="39765">Jail Courtroom</option>
+                            <option value="996">Jury Assembly Room</option>
+                            <option value="41604">
+                              Magistrate Criminal Courtroom A
+                            </option>
+                            <option value="41605">
+                              Magistrate Criminal Courtroom B
+                            </option>
+                            <option value="41603">
+                              Magistrate Ordinance Courtroom 2
+                            </option>
+                            <option value="33090">
+                              Magistrate Ordinance Courtroom E
+                            </option>
+                            <option value="38497">Peachford Hospital</option>
+                            <option value="38496">
+                              Probate Conference Room
+                            </option>
+                            <option value="33737">Probate Courtroom</option>
+                            <option value="41483">
+                              Small Claims Virtual CT1
+                            </option>
+                            <option value="41484">
+                              Small Claims Virtual CT2
+                            </option>
+                            <option value="41485">
+                              Small Claims Virtual CT3
+                            </option>
+                            <option value="1585">
+                              State Court Location - Non Superior
+                            </option>
+                            <option value="41956">
+                              TLAC Approved Virtual Notice
+                            </option>
+                            <option value="38498">
+                              Wesley Woods - Emory Hospital
+                            </option>
+                          </select>
+                          <label for="selHSCourtroom" style="position: absolute"
+                            >* Select Courtroom</label
+                          >
+                        </fieldset>
+                      </div>
+                      <input
+                        type="hidden"
+                        value="0"
+                        id="HSPrevSelectedCourtroom"
+                      />
+                      <div>
+                        <div class="col-md-6 col-sm-6" id="dateFromDiv">
+                          <fieldset>
+                            <input
+                              type="text"
+                              id="SearchCriteria_DateFrom"
+                              name="SearchCriteria.DateFrom"
+                              value=""
+                              class="tyler-datepicker form-control"
+                              autocomplete="off"
+                              data-val="true"
+                              data-val-required="Date From is a required field"
+                              data-val-regex="Please select a valid date. (MM/DD/YYYY)"
+                              data-val-regex-pattern="(((10|12|0?[13578])([/])(3[01]|[12][0-9]|0?[1-9])([/])((1[8-9]\d{2})|([2-9]\d{3})))|((11|0?[469])([/])(30|[12][0-9]|0?[1-9])([/])((1[8-9]\d{2})|([2-9]\d{3})))|((0?2)([/])(2[0-8]|1[0-9]|0?[1-9])([/])((1[8-9]\d{2})|([2-9]\d{3})))|((0?2)([/])(29)([/])([2468][048]00))|((0?2)([/])(29)([/])([3579][26]00))|((0?2)([/])(29)([/])([1][89][0][48]))|((0?2)([/])(29)([/])([2-9][0-9][0][48]))|((0?2)([/])(29)([/])([1][89][2468][048]))|((0?2)([/])(29)([/])([2-9][0-9][2468][048]))|((0?2)([/])(29)([/])([1][89][13579][26]))|((0?2)([/])(29)([/])([2-9][0-9][13579][26])))"
+                              <
+                            /><label for="SearchCriteria_DateFrom"
+                              >* Search by Date From</label
+                            >
+                          </fieldset>
+                        </div>
+                        <div class="col-md-6 col-sm-6" id="dateToDiv">
+                          <fieldset>
+                            <input
+                              type="text"
+                              id="SearchCriteria_DateTo"
+                              name="SearchCriteria.DateTo"
+                              value=""
+                              class="tyler-datepicker form-control"
+                              autocomplete="off"
+                              data-val="true"
+                              data-val-required="Date To is a required field"
+                              data-val-regex="Please select a valid date. (MM/DD/YYYY)"
+                              data-val-regex-pattern="(((10|12|0?[13578])([/])(3[01]|[12][0-9]|0?[1-9])([/])((1[8-9]\d{2})|([2-9]\d{3})))|((11|0?[469])([/])(30|[12][0-9]|0?[1-9])([/])((1[8-9]\d{2})|([2-9]\d{3})))|((0?2)([/])(2[0-8]|1[0-9]|0?[1-9])([/])((1[8-9]\d{2})|([2-9]\d{3})))|((0?2)([/])(29)([/])([2468][048]00))|((0?2)([/])(29)([/])([3579][26]00))|((0?2)([/])(29)([/])([1][89][0][48]))|((0?2)([/])(29)([/])([2-9][0-9][0][48]))|((0?2)([/])(29)([/])([1][89][2468][048]))|((0?2)([/])(29)([/])([2-9][0-9][2468][048]))|((0?2)([/])(29)([/])([1][89][13579][26]))|((0?2)([/])(29)([/])([2-9][0-9][13579][26])))"
+                              data-val-maxDate="Date To must be on or before 02/11/2022."
+                              data-val-maxDate-maxdaysfromtoday="-1"
+                              <
+                            /><label for="SearchCriteria_DateTo"
+                              >* Search by Date To</label
+                            >
+                          </fieldset>
+                        </div>
+                      </div>
+                      <div class="col-md-12 col-sm-12">
+                        <p>&nbsp;</p>
+                        <a
+                          class="btn btn-primary pull-left"
+                          href="/portal/Hearings/HearingSearch/Clear/26"
+                          >Clear</a
+                        >
+                        <input
+                          type="submit"
+                          id="btnHSSubmit"
+                          name="Search"
+                          class="btn btn-primary pull-right"
+                          value="Submit"
+                        />
+                      </div>
+                    </form>
+                  </div>
+                  <!-- /end div.portlet-body -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer
+      role="contentinfo"
+      class="margin-top center-block"
+      style="width: 95%"
+    >
+      <div class="row visible-xs">
+        <div class="col-xs-12" style="margin: 0 0 0.5rem -0.5rem">
+          <img
+            class="pull-left noprint"
+            src="/portal/Content/tylerui/images/empowered.png"
+            alt="Empowered By Tyler Technologies"
+          />
+        </div>
+        <div class="col-xs-12">
+          <small class="pull-left noprint"
+            >&copy; 2022 Tyler Technologies, Inc. | All Rights Reserved</small
+          >
+          <br />
+          <small class="pull-left noprint">Version: 2017.1.27.0</small>
+        </div>
+      </div>
+      <div class="row hidden-xs">
+        <div class="col-xs-6 col-md-6">
+          <small class="pull-left noprint"
+            >&copy; 2022 Tyler Technologies, Inc. | All Rights Reserved</small
+          >
+          <br />
+          <small class="pull-left noprint">Version: 2017.1.27.0</small>
+        </div>
+        <div class="col-xs-6 col-md-6">
+          <img
+            alt="Empowered By Tyler Technologies"
+            class="pull-right noprint"
+            src="/portal/Content/tylerui/images/empowered.png"
+          />
+        </div>
+      </div>
+    </footer>
+
+    <div style="display: none">Machine: IT-ODYPORT-WP2</div>
+
+    <script>
+      (function (config) {
+        Object.keys(config).forEach(function (k) {
+          window.odyPortal.sessionInfo[k] = config[k];
+        });
+      })({
+        sessionTimeout: 20,
+        isAuthenticated: false,
+        isKioskMode: false,
+        isRouteHomeOrIndex: false,
+        homeUrl: "/portal/?clearSession=True",
+        logOffUrl: "/portal/Account/LogOff?showLandingPage=True",
+        refreshUrl: "/portal/Home/RefreshSession",
+      });
+    </script>
+    <div id="timeout-wrapper" class="lockoutScreen" style="display: none">
+      <div class="hidden-lg hidden-md hidden-sm" style="height: 55px"></div>
+      <div
+        id="page-timeout"
+        class="timeout-container"
+        style="
+          border: 2px solid rgba(100, 100, 100, 0.3);
+          padding: 30px;
+          border-radius: 0;
+          height: 220px;
+        "
+      >
+        <h2 style="margin-top: 0">Are you still here?</h2>
+        <hr />
+        <p>
+          Your session will expire in
+          <b><span class="text-primary" id="timeOutTimer">60</span></b> seconds
+          due to inactivity.
+        </p>
+        <p>
+          <input
+            type="button"
+            id="timeoutContinueBtn"
+            class="btn btn-primary pull-right"
+            value="I'm still here."
+          />
+        </p>
+      </div>
+    </div>
+    <div
+      id="sessionTimeoutOverlay"
+      style="
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 2147483646;
+        background-color: #000;
+        opacity: 0.7;
+      "
+    ></div>
+  </body>
+</html>

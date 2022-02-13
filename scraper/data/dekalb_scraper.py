@@ -13,6 +13,9 @@ class Scraper:
         self.headers = {"User-Agent": "CodeForAtlanta Court Bot"}
         self.session = requests.Session()
 
+    def close_session(self):
+        self.session.close()
+
     def get_all_judicial_officers(self):
         url = "https://ody.dekalbcountyga.gov/portal/Home/Dashboard/26"
         response = self.session.get(url, headers=self.headers)
