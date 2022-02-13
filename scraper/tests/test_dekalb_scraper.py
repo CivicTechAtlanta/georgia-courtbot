@@ -55,3 +55,19 @@ class TestScraperMethods(TestCase):
             headers={"User-Agent": "CodeForAtlanta Court Bot"},
         )
         scraper.close_session()
+
+    @mock.patch.object(Session, "post")
+    def test_get_search_result(self, mock_post):
+        expected = {"returned": "this json object"}
+        scraper = data.dekalb_scraper.Scraper()
+        mock_post.return_value = mock.Mock(
+            status_code=200, content=json.dumps(expected)
+        )
+        result = scraper.get_search_result()
+        self.assertEqual(result, expected)
+        mock_post.assert_called_with(
+            "https://ody.dekalbcountyga.gov/portal/Hearing/HearingResults/Read",
+            data={"sort": "", "group": "", "filter": "", "portletId": "27"},
+            headers={"User-Agent": "CodeForAtlanta Court Bot"},
+        )
+        scraper.close_session()
