@@ -75,16 +75,16 @@ class Scraper:
         response = self.get_search_result()
         cases = response["Data"]
         if response["MaxResultsHit"] == True:
-            last_case = max(
-                cases, key=lambda case: hearing_date_to_datetime(case["HearingDate"])
-            )
-            offset_date_from = hearing_date_to_datetime(last_case["HearingDate"])
-            page = self.get_cases_by_judicial_officer(
-                officer, offset_date_from, date_to
-            )
+            last_case = find_last_case(cases)
+            offset_date = hearing_date_to_datetime(last_case["HearingDate"])
+            page = self.get_cases_by_judicial_officer(officer, offset_date, date_to)
             cases.extend(case for case in page if case not in cases)
 
         return cases
+
+
+def find_last_case(cases):
+    return max(cases, key=lambda case: hearing_date_to_datetime(case["HearingDate"]))
 
 
 def hearing_date_to_datetime(string):
