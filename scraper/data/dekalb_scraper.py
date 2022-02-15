@@ -19,6 +19,7 @@ class Scraper:
     def get_all_judicial_officers(self):
         url = "https://ody.dekalbcountyga.gov/portal/Home/Dashboard/26"
         response = self.session.get(url, headers=self.headers)
+        cache("cached/get_all_judicial_officers", response.content)
         soup = BeautifulSoup(response.content, "html.parser")
 
         result = [
@@ -66,6 +67,7 @@ class Scraper:
             headers=self.headers,
         )
 
+        cache(f"cached/get_search_result_{datetime.datetime.now()}", response.content)
         return json.loads(response.content)
 
     def get_cases_by_judicial_officer(self, officer, date_from, date_to):
@@ -91,6 +93,12 @@ def hearing_date_to_datetime(string):
 
 def datetime_to_hearing_date(dt):
     return datetime.date.strftime(dt, "%m/%d/%Y")
+
+
+def cache(filepath, content):
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    with open(filepath, "wb+") as f:
+        f.write(content)
 
 
 def log(*args):
