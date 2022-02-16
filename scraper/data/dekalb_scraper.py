@@ -15,7 +15,8 @@ class Scraper:
 
     def get_all_judicial_officers(self):
         url = "https://ody.dekalbcountyga.gov/portal/Home/Dashboard/26"
-        response = self.session.get(url, headers=self.headers)
+        # Ignore SSL verification issues because the remote site returns an incomplete certificate chain.
+        response = self.session.get(url, headers=self.headers, verify=False)
         soup = BeautifulSoup(response.content, "html.parser")
 
         result = [
