@@ -12,6 +12,8 @@ class Scraper:
     def __init__(self):
         self.headers = {"User-Agent": "CodeForAtlanta Court Bot"}
         self.session = requests.Session()
+        self.session.verify = False
+        requests.packages.urllib3.disable_warnings()
 
     def get_all_judicial_officers(self):
         url = "https://ody.dekalbcountyga.gov/portal/Home/Dashboard/26"

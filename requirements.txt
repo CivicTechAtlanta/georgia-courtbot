@@ -5,6 +5,7 @@ cachetools==5.0.0
 certifi==2021.10.8
 charset-normalizer==2.0.12
 click==8.0.3
+flask==2.0.2
 google-api-core==2.5.0
 google-auth==2.6.0
 google-cloud-bigquery==2.32.0
@@ -14,6 +15,7 @@ google-resumable-media==2.2.1
 googleapis-common-protos==1.54.0
 grpcio==1.43.0
 grpcio-status==1.43.0
+gunicorn==20.1.0
 idna==3.3
 jsonschema==4.4.0
 packaging==21.3
