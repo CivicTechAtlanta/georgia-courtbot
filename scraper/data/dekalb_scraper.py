@@ -52,7 +52,8 @@ class Fetcher:
 
     def get_all_judicial_officers(self):
         url = "https://ody.dekalbcountyga.gov/portal/Home/Dashboard/26"
-        response = self.session.get(url, headers=self.headers)
+        # Ignore SSL verification issues because the remote site returns an incomplete certificate chain.
+        response = self.session.get(url, headers=self.headers, verify=False)
         self.cacher.write("get_all_judicial_officers", response.content)
         return response.content
 
