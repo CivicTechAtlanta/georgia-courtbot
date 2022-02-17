@@ -11,8 +11,7 @@ def read_testdata(named):
     with open(file_path, "r") as f:
         return f.read()
 
-
-class TestScraperMethods(TestCase):
+class TestDateTimeConversion(TestCase):
     def test_hearing_date_to_datetime(self):
         got = data.dekalb_scraper.datetime_to_hearing_date(datetime.date(2007, 12, 5))
         self.assertEqual(got, "12/05/2007")
@@ -22,6 +21,12 @@ class TestScraperMethods(TestCase):
         expected = datetime.datetime(2007, 12, 15)
         self.assertEqual(got, expected)
 
+class TestScraperMethods(TestCase):
+    def test_get_all_judicial_officers(self):
+        scraper = data.dekalb_scraper.Scraper()
+        got = scraper.get_all_judicial_officers(read_testdata("26.html"))
+        expected = json.loads(read_testdata("output.json"))
+        self.assertCountEqual(got, expected)
 
 class TestFetcherMethods(TestCase):
     @mock.patch.object(Session, "get")
