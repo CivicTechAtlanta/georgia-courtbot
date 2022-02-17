@@ -30,7 +30,9 @@ class TestFetcherMethods(TestCase):
         fetcher = data.dekalb_scraper.Fetcher(cacher=cacher)
         fetcher.get_all_judicial_officers()
         mock_get.assert_called_with(
-            "https://ody.dekalbcountyga.gov/portal/Home/Dashboard/26"
+            "https://ody.dekalbcountyga.gov/portal/Home/Dashboard/26",
+            headers={"User-Agent": "CodeForAtlanta Court Bot"},
+            verify=False,
         )
 
     @mock.patch.object(Session, "post")
