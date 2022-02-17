@@ -22,21 +22,22 @@ class TestScraperMethods(TestCase):
         expected = datetime.datetime(2007, 12, 15)
         self.assertEqual(got, expected)
 
+
+class TestFetcherMethods(TestCase):
     @mock.patch.object(Session, "get")
     def test_get_all_judicial_officers(self, mock_get):
-        mock_get.return_value = mock.Mock(
-            status_code=200, content=read_testdata("26.html")
+        cacher = data.dekalb_scraper.Cacher(cache_path=None)
+        fetcher = data.dekalb_scraper.Fetcher(cacher=cacher)
+        fetcher.get_all_judicial_officers()
+        mock_get.assert_called_with(
+            "https://ody.dekalbcountyga.gov/portal/Home/Dashboard/26"
         )
-        scraper = data.dekalb_scraper.Scraper()
-        scraper.close_session()
-        got = [x for x in scraper.get_all_judicial_officers()]
-        expected = json.loads(read_testdata("output.json"))
-        self.assertCountEqual(got, expected)
 
     @mock.patch.object(Session, "post")
     def test_search_by_judicial_officer(self, mock_post):
-        scraper = data.dekalb_scraper.Scraper()
-        scraper.search_by_judicial_officer(
+        cacher = data.dekalb_scraper.Cacher(cache_path=None)
+        fetcher = data.dekalb_scraper.Fetcher(cacher=cacher)
+        fetcher.search_by_judicial_officer(
             "judge_named", datetime.datetime(2021, 1, 1), datetime.datetime(2021, 5, 1)
         )
         mock_post.assert_called_with(
@@ -54,20 +55,16 @@ class TestScraperMethods(TestCase):
             },
             headers={"User-Agent": "CodeForAtlanta Court Bot"},
         )
-        scraper.close_session()
+        fetcher.close_session()
 
     @mock.patch.object(Session, "post")
     def test_get_search_result(self, mock_post):
-        expected = {"returned": "this json object"}
-        scraper = data.dekalb_scraper.Scraper()
-        mock_post.return_value = mock.Mock(
-            status_code=200, content=json.dumps(expected)
-        )
-        result = scraper.get_search_result()
-        self.assertEqual(result, expected)
+        cacher = data.dekalb_scraper.Cacher(cache_path=None)
+        fetcher = data.dekalb_scraper.Fetcher(cacher=cacher)
+        fetcher.get_search_result()
         mock_post.assert_called_with(
             "https://ody.dekalbcountyga.gov/portal/Hearing/HearingResults/Read",
             data={"sort": "", "group": "", "filter": "", "portletId": "27"},
             headers={"User-Agent": "CodeForAtlanta Court Bot"},
         )
-        scraper.close_session()
+        fetcher.close_session()
