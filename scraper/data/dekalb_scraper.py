@@ -8,15 +8,26 @@ import os
 from bs4 import BeautifulSoup
 
 
+class Cacher:
+    def __init__(self, cache_path):
+        self.cache_path = cache_path
+
+    def write(self, filepath, content):
+        if self.cache_path is None:
+            return
+
+        path = os.path.join(self.cache_path, filepath)
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "wb+") as f:
+            f.write(content)
+
+
 class Scraper:
     def __init__(self):
-        self.headers = {"User-Agent": "CodeForAtlanta Court Bot"}
-        self.session = requests.Session()
+        pass
 
-    def get_all_judicial_officers(self):
-        url = "https://ody.dekalbcountyga.gov/portal/Home/Dashboard/26"
-        response = self.session.get(url, headers=self.headers)
-        soup = BeautifulSoup(response.content, "html.parser")
+    def get_all_judicial_officers(self, content):
+        soup = BeautifulSoup(content, "html.parser")
 
         result = [
             {"id": el.get("value"), "name": el.get_text()}
@@ -25,7 +36,28 @@ class Scraper:
 
         return filter(lambda e: e["name"] != "", result)
 
-    def submit_search_by_judicial_officer(self, name, date_from, date_to):
+    def get_search_result(self, content):
+        obj = json.loads(content)
+        return (obj["Data"], obj["MaxResultsHit"])
+
+
+class Fetcher:
+    def __init__(self, cacher):
+        self.headers = {"User-Agent": "CodeForAtlanta Court Bot"}
+        self.session = requests.Session()
+        self.cacher = cacher
+
+    def close_session(self):
+        self.session.close()
+
+    def get_all_judicial_officers(self):
+        url = "https://ody.dekalbcountyga.gov/portal/Home/Dashboard/26"
+        # Ignore SSL verification issues because the remote site returns an incomplete certificate chain.
+        response = self.session.get(url, headers=self.headers, verify=False)
+        self.cacher.write("get_all_judicial_officers", response.content)
+        return response.content
+
+    def search_by_judicial_officer(self, name, date_from, date_to):
         url = (
             "https://ody.dekalbcountyga.gov/portal/Hearing/SearchHearings/HearingSearch"
         )
@@ -42,11 +74,13 @@ class Scraper:
             "SearchCriteria.DateTo": datetime_to_hearing_date(date_to),
         }
 
-        self.session.post(
+        response = self.session.post(
             url,
             data=data,
             headers=self.headers,
         )
+
+        self.cacher.write("search_by_judicial_officer", response.content)
 
     def get_search_result(self):
         url = "https://ody.dekalbcountyga.gov/portal/Hearing/HearingResults/Read"
@@ -63,23 +97,15 @@ class Scraper:
             headers=self.headers,
         )
 
-        return json.loads(response.content)
+        self.cacher.write(
+            f"get_search_result_{datetime.datetime.now()}", response.content
+        )
 
-    def get_cases_by_judicial_officer(self, officer, date_from, date_to):
-        self.submit_search_by_judicial_officer(officer["id"], date_from, date_to)
-        response = self.get_search_result()
-        cases = response["Data"]
-        if response["MaxResultsHit"] == True:
-            last_case = max(
-                cases, key=lambda case: hearing_date_to_datetime(case["HearingDate"])
-            )
-            offset_date_from = hearing_date_to_datetime(last_case["HearingDate"])
-            page = self.get_cases_by_judicial_officer(
-                officer, offset_date_from, date_to
-            )
-            cases.extend(case for case in page if case not in cases)
+        return response.content
 
-        return cases
+
+def find_last_case(cases):
+    return max(cases, key=lambda case: hearing_date_to_datetime(case["HearingDate"]))
 
 
 def hearing_date_to_datetime(string):
@@ -106,7 +132,9 @@ def take_fields_of_interest(case):
     }
 
 
-def scrape(days):
+def scrape(days, cache_path):
+    cacher = Cacher(cache_path)
+    fetcher = Fetcher(cacher)
     scraper = Scraper()
 
     date_from = datetime.date.today()
@@ -120,10 +148,27 @@ def scrape(days):
         f"ID\tName\t",
     )
 
-    for officer in scraper.get_all_judicial_officers():
+    officers = scraper.get_all_judicial_officers(fetcher.get_all_judicial_officers())
+
+    def fetch(officer_id, date_from, date_to):
+        fetcher.search_by_judicial_officer(officer_id, date_from, date_to)
+        cases, hasMoreData = scraper.get_search_result(fetcher.get_search_result())
+        if hasMoreData == True:
+            last_case = find_last_case(cases)
+            offset_date = hearing_date_to_datetime(last_case["HearingDate"])
+            page = fetch(officer, offset_date, date_to)
+            cases.extend(case for case in page if case not in cases)
+
+        return cases
+
+    for officer in officers:
         log(f'{officer["id"]}\t{officer["name"]}')
-        cases = scraper.get_cases_by_judicial_officer(officer, date_from, date_to)
-        results.extend([take_fields_of_interest(case) for case in cases])
+        results.extend(
+            [
+                take_fields_of_interest(case)
+                for case in fetch(officer["id"], date_from, date_to)
+            ]
+        )
 
     return results
 
@@ -160,7 +205,7 @@ def report(results, output_format):
         log(f"Unknown output format: '{output_format}'!")
 
 
-def run(output, days):
-    results = scrape(days=days)
+def run(output, days, cache_path):
+    results = scrape(days=days, cache_path=cache_path)
     validate(results)
     report(results, output_format=output)
