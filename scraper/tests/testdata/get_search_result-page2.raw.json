@@ -1,0 +1,83 @@
+{
+  "AggregateResults": null,
+  "Data": [
+    {
+      "_SortStyleOrDefendant": null,
+      "CaseId": 3849216,
+      "EncryptedCaseId": "3vFUdJMHO4pO0cY9K9wxjw2",
+      "FileDate": "/Date(1644210000000)/",
+      "CaseCategoryKey": "CR",
+      "CaseCategoryDescription": "Criminal",
+      "CaseTypeId": {
+        "Word": "SMMISD",
+        "Description": "Misdemeanor",
+        "HasValue": true
+      },
+      "CaseSubTypeId": null,
+      "NodeID": 2999,
+      "LocationName": "State Pre-File",
+      "CaseSecurityGroupId": null,
+      "CaseHeaderMask": 0,
+      "CaseNumber": "22S-000810",
+      "SortStyleOrDefendant": "SAMUELS, TERRANCE JAMES",
+      "StatusId": { "Word": "0", "Description": null, "HasValue": false },
+      "CaseStatusId": { "Word": "0", "Description": null, "HasValue": false },
+      "StatusDate": "/Date(-62135578800000)/",
+      "StatusDateSort": null,
+      "Style": "State VS TERRANCE JAMES SAMUELS",
+      "SortDtFile": 0,
+      "CaseAssignmentHistoryId": 0,
+      "JudgeId": {
+        "Word": "WMP",
+        "Description": "Purdom, Wayne M",
+        "HasValue": true
+      },
+      "JudgeParsed": "Purdom, Wayne M",
+      "JudgeIds": [
+        { "Word": "WMP", "Description": "Purdom, Wayne M", "HasValue": true }
+      ],
+      "MagistrateId": null,
+      "GroupId": null,
+      "GroupNumber": null,
+      "GroupTypeId": null,
+      "WarrantCount": 0,
+      "TotalWarrantCount": 0,
+      "UserIDCreate": 0,
+      "UserIdChange": null,
+      "LeadFamilyCase": 0,
+      "TimeStampCreate": null,
+      "TimeStampChange": null,
+      "FiledAs": null,
+      "ExtendedConnectionId": null,
+      "OriginalStatusDate": "/Date(-62135578800000)/",
+      "DefendantName": "SAMUELS, TERRANCE JAMES",
+      "EDiscoveryCount": 0,
+      "OtherDiscoveryCount": 0,
+      "ProsCaseNumber": null,
+      "AttorneyName": null,
+      "AttorneyId": 0,
+      "ViewedCount": 0,
+      "NewItemCount": 0,
+      "Charges": null,
+      "CauseOfActions": null,
+      "CaseFlags": null,
+      "HearingId": 40769575,
+      "HearingDate": "2/18/2022",
+      "HearingDateParsed": "/Date(1645160400000)/",
+      "HearingTime": "11:00 AM",
+      "HearingTimeParsed": "/Date(1645200000000)/",
+      "HearingLocations": ["Courtroom 3B"],
+      "CourtRoom": "Courtroom 3B",
+      "HearingTypeId": {
+        "Word": "SMBOND",
+        "Description": "Bond Hearing",
+        "HasValue": true
+      }
+    }
+  ],
+  "Errors": null,
+  "Total": 1,
+  "MaxResultsHit": false,
+  "ForwardToROA": false,
+  "ROAAuthorized": true
+}

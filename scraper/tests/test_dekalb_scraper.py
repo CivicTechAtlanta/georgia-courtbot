@@ -35,9 +35,16 @@ class TestScraperMethods(TestCase):
     def test_get_search_result(self):
         scraper = data.dekalb_scraper.Scraper()
         got, has_more_data = scraper.get_search_result(
-            testdata("get_search_result.raw.json")
+            testdata("get_search_result-page1.raw.json")
         )
-        expected = json.loads(testdata("get_search_result.scraped.json"))
+        expected = json.loads(testdata("get_search_result-page1.scraped.json"))
+        self.assertTrue(has_more_data)
+        self.assertCountEqual(got, expected)
+
+        got, has_more_data = scraper.get_search_result(
+            testdata("get_search_result-page2.raw.json")
+        )
+        expected = json.loads(testdata("get_search_result-page2.scraped.json"))
         self.assertFalse(has_more_data)
         self.assertCountEqual(got, expected)
 
