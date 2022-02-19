@@ -6,7 +6,7 @@ from requests import Session
 import data.dekalb_scraper
 
 
-def read_testdata(named):
+def testdata(named):
     file_path = os.path.join(os.path.dirname(__file__), "testdata", named)
     with open(file_path, "r") as f:
         return f.read()
@@ -26,16 +26,18 @@ class TestDateTimeConversion(TestCase):
 class TestScraperMethods(TestCase):
     def test_get_all_judicial_officers(self):
         scraper = data.dekalb_scraper.Scraper()
-        got = scraper.get_all_judicial_officers(read_testdata("26.html"))
-        expected = json.loads(read_testdata("output.json"))
+        got = scraper.get_all_judicial_officers(
+            testdata("get_all_judicial_officers.raw.html")
+        )
+        expected = json.loads(testdata("get_all_judicial_officers.scraped.json"))
         self.assertCountEqual(got, expected)
 
     def test_get_search_result(self):
         scraper = data.dekalb_scraper.Scraper()
         got, has_more_data = scraper.get_search_result(
-            read_testdata("get_search_result.json")
+            testdata("get_search_result.raw.json")
         )
-        expected = json.loads(read_testdata("get_search_result.expected.json"))
+        expected = json.loads(testdata("get_search_result.scraped.json"))
         self.assertFalse(has_more_data)
         self.assertCountEqual(got, expected)
 
