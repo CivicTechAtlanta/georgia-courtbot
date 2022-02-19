@@ -132,11 +132,7 @@ def take_fields_of_interest(case):
     }
 
 
-def scrape(days, cache_path):
-    cacher = Cacher(cache_path)
-    fetcher = Fetcher(cacher)
-    scraper = Scraper()
-
+def scrape(*, fetcher, scraper, days):
     date_from = datetime.date.today()
     date_to = date_from + datetime.timedelta(days)
 
@@ -150,13 +146,13 @@ def scrape(days, cache_path):
 
     officers = scraper.get_all_judicial_officers(fetcher.get_all_judicial_officers())
 
-    def fetch(officer_id, date_from, date_to):
+    def scrape_cases(officer_id, date_from, date_to):
         fetcher.search_by_judicial_officer(officer_id, date_from, date_to)
         cases, hasMoreData = scraper.get_search_result(fetcher.get_search_result())
         if hasMoreData == True:
             last_case = find_last_case(cases)
             offset_date = hearing_date_to_datetime(last_case["HearingDate"])
-            page = fetch(officer, offset_date, date_to)
+            page = scrape_cases(officer, offset_date, date_to)
             cases.extend(case for case in page if case not in cases)
 
         return cases
@@ -166,7 +162,7 @@ def scrape(days, cache_path):
         results.extend(
             [
                 take_fields_of_interest(case)
-                for case in fetch(officer["id"], date_from, date_to)
+                for case in scrape_cases(officer["id"], date_from, date_to)
             ]
         )
 
@@ -206,6 +202,9 @@ def report(results, output_format):
 
 
 def run(output, days, cache_path):
-    results = scrape(days=days, cache_path=cache_path)
+    cacher = Cacher(cache_path)
+    fetcher = Fetcher(cacher)
+    scraper = Scraper()
+    results = scrape(fetcher=fetcher, scraper=scraper, days=days)
     validate(results)
     report(results, output_format=output)

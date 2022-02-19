@@ -20,8 +20,14 @@ def cli():
     default=90,
     help="How many days of data to scrape, measured from today. Default is 90 days.",
 )
-def scrape(output, days):
-    scraper.data.dekalb_scraper.run(output, days)
+@click.option(
+    "--cache",
+    type=click.Path(file_okay=False, dir_okay=True),
+    default=None,
+    help="Cache raw requests results to this folder.",
+)
+def scrape(output, days, cache):
+    scraper.data.dekalb_scraper.run(output, days, cache_path=cache)
 
 
 @cli.command()
