@@ -1,11 +1,11 @@
 {
-  "type": "object",
-  "properties": {
-    "CaseId": { "type": "number" },
-    "CaseNumber": { "type": "string" },
-    "HearingDate": { "type": "string" },
-    "HearingTime": { "type": "string" },
-    "CourtRoom": { "type": "string" },
-    "JudicialOfficer": { "type": "string" }
-  }
+  "CaseId": { "type": "number" },
+  "CaseNumber": {
+    "type": "string",
+    "regex": "^\\D\\d{7}|\\d{2}\\D{1,2}\\d{4,6}\\D*\\d*$"
+  },
+  "HearingDate": { "type": "string" },
+  "HearingTime": { "type": "string" },
+  "CourtRoom": { "type": "string" },
+  "JudicialOfficer": { "type": "string" }
 }

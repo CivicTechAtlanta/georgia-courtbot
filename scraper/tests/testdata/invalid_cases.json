@@ -1,0 +1,42 @@
+[
+  {
+    "CaseId": 1,
+    "CaseNumber": "2",
+    "HearingDate": "2/22/2022",
+    "HearingTime": "10:00 AM",
+    "CourtRoom": "Courtroom 5D",
+    "JudicialOfficer": "Judge A"
+  },
+  {
+    "CaseId": 2,
+    "CaseNumber": "A",
+    "HearingDate": "2/22/2022",
+    "HearingTime": "10:00 AM",
+    "CourtRoom": "Courtroom 5D",
+    "JudicialOfficer": "Judge B"
+  },
+  {
+    "CaseId": 3,
+    "CaseNumber": "not-a-case-number",
+    "HearingDate": "2/22/2022",
+    "HearingTime": "10:00 AM",
+    "CourtRoom": "Courtroom 5D",
+    "JudicialOfficer": "Judge C"
+  },
+  {
+    "CaseId": 4,
+    "CaseNumber": "D0287021-",
+    "HearingDate": "2/22/2022",
+    "HearingTime": "10:00 AM",
+    "CourtRoom": "Courtroom 5D",
+    "JudicialOfficer": "Judge C"
+  },
+  {
+    "CaseId": 4,
+    "CaseNumber": "",
+    "HearingDate": "2/22/2022",
+    "HearingTime": "10:00 AM",
+    "CourtRoom": "Courtroom 5D",
+    "JudicialOfficer": "Judge C"
+  }
+]

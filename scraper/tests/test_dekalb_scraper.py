@@ -23,6 +23,20 @@ class TestDateTimeConversion(TestCase):
         self.assertEqual(got, expected)
 
 
+class TestValidator(TestCase):
+    def test_valid_cases(self):
+        validator = data.dekalb_scraper.Validator()
+        cases = json.loads(testdata("valid_cases.json"))
+        got = [case for case in cases if validator.is_valid_case(case) is False]
+        self.assertCountEqual(got, [])
+
+    def test_invalid_cases(self):
+        validator = data.dekalb_scraper.Validator()
+        cases = json.loads(testdata("invalid_cases.json"))
+        got = [case for case in cases if validator.is_valid_case(case) is False]
+        self.assertCountEqual(got, cases)
+
+
 class TestScraperMethods(TestCase):
     def test_get_all_judicial_officers(self):
         scraper = data.dekalb_scraper.Scraper()

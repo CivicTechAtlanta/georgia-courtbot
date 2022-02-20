@@ -3,8 +3,8 @@ import requests
 import json
 import sys
 import csv
-import jsonschema
 import os
+import cerberus
 from bs4 import BeautifulSoup
 
 
@@ -169,11 +169,16 @@ def scrape(*, fetcher, scraper, days):
     return results
 
 
-def validate(results):
-    schema_file_path = os.path.join(os.path.dirname(__file__), "schema", "case.json")
-    schema = json.load(open(schema_file_path))
-    for case in results:
-        jsonschema.validate(instance=case, schema=schema)
+class Validator:
+    def __init__(self):
+        schema_file_path = os.path.join(
+            os.path.dirname(__file__), "schema", "case.json"
+        )
+        with open(schema_file_path) as f:
+            self.case_validator = cerberus.Validator(json.load(f))
+
+    def is_valid_case(self, case):
+        return self.case_validator.validate(case)
 
 
 def report(results, output_format):
@@ -202,9 +207,7 @@ def report(results, output_format):
 
 
 def run(output, days, cache_path):
-    cacher = Cacher(cache_path)
-    fetcher = Fetcher(cacher)
-    scraper = Scraper()
-    results = scrape(fetcher=fetcher, scraper=scraper, days=days)
-    validate(results)
-    report(results, output_format=output)
+    cases = scrape(fetcher=Fetcher(Cacher(cache_path)), scraper=Scraper(), days=days)
+    validator = Validator()
+    invalid_cases = [case for case in cases if validator.is_valid_case(case) is False]
+    print(invalid_cases, file=sys.stderr)
