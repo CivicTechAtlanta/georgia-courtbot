@@ -1,5 +1,5 @@
 const { BigQuery } = require("@google-cloud/bigquery");
-
+const fetch = require('node-fetch');
 exports.handler = async function (context, event, callback) {
   console.log(`Query_bigquery function running. Event:`);
   console.log(event);
@@ -30,31 +30,58 @@ exports.handler = async function (context, event, callback) {
       regex_res =
         str.match(/(\d{2})([A-Z]{1,2})(\d{4,5})/) ||
         str.match(/([A-Z]{1})(\d{7})/);
+      let caseNumber = regex_res[0]
+      // const sqlQuery = `
+      //   SELECT *
+      //   FROM \`cfa-georgia-courtbot.STG.HEARING\`
+      //   WHERE CaseNumber='${caseNumber}'
+      //   LIMIT 1`;
+      // console.log(sqlQuery);
 
-      const sqlQuery = `
-        SELECT *
-        FROM \`cfa-georgia-courtbot.STG.HEARING\`
-        WHERE CaseNumber='${regex_res[0]}'
-        LIMIT 1`;
-      console.log(sqlQuery);
+      // const options = {
+      //   query: sqlQuery,
+      //   // Location must match that of the dataset(s) referenced in the query.
+      //   location: "us",
+      // };
 
-      const options = {
-        query: sqlQuery,
-        // Location must match that of the dataset(s) referenced in the query.
-        location: "us",
-      };
+      // const [rows] = await bigqueryClient.query(options);
+      // console.log("BigQuery result:");
+      // console.log(rows);
+      
 
-      const [rows] = await bigqueryClient.query(options);
-      console.log("BigQuery result:");
-      console.log(rows);
+      // if (rows.length) {
+        console.log(caseNumber);
+      var result = await fetch(`https://us-east1-cfa-georgia-courtbot.cloudfunctions.net/getHearing?caseNumber=${caseNumber}`);
+      if( result.ok ) {
+        // If we have a result, get it as json
+        var json = await result.json();
+        if( // Check that we got back the kind of data we wanted, and it contains at least one hearing result
+              json.hasOwnProperty('Data') 
+              && json.Data.length > 0 
+              && json.Data[0].hasOwnProperty('CaseNumber')
+        ) {
+          var hearing = json.Data[0];
+          const dataset = bigqueryClient.dataset('STG');
+          const table = dataset.table('SUBSCRIPTION');
+          let data = await table.insert({
+            CaseNumber: caseNumber,
+            PhoneNumber: event.user_phone
+          })
 
-      if (rows.length) {
-        return callback(null, {
-          hearing_found: true,
-          date: rows[0].HearingDate.value,
-          time: rows[0].HearingTime,
-          courtroom: rows[0].CourtRoom,
-        });
+          return callback(null, {
+            hearing_found: true,
+            // date: rows[0].HearingDate.value,
+            // time: rows[0].HearingTime,
+            // courtroom: rows[0].CourtRoom,
+            date: hearing.HearingDate,
+            time: hearing.HearingTime,
+            courtroom: hearing.CourtRoom
+          });
+        }
+        else
+        {
+          return callback({ hearing_found: false });
+        }
       } else {
         return callback({ hearing_found: false });
       }

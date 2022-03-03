@@ -1,0 +1,10 @@
+SELECT
+  S.PhoneNumber, H.HearingDate, H.CourtRoom, H.HearingTime, H.JudicialOfficer
+FROM
+  `cfa-georgia-courtbot.STG.SUBSCRIPTION` S
+JOIN
+  `cfa-georgia-courtbot.STG.HEARING` H
+ON
+  S.CaseNumber = H.CaseNumber
+WHERE
+  DATE_DIFF(H.HearingDate, CURRENT_DATE('America/New_York'), DAY) = 1 OR DATE_DIFF(H.HearingDate, CURRENT_DATE('America/New_York'), DAY) = 3
