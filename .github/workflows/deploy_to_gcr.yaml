@@ -1,0 +1,113 @@
+# Borrowed from a Google example:
+# https://github.com/google-github-actions/deploy-cloudrun/blob/main/.github/workflows/example-workflow.yaml
+
+# This is a manually activated GitHub action to deploy the scraper to Google CLoud Run
+# and set Cloud Scheduler for it to run at 3am daily
+
+# If the Cloud Service already exists, the image will be overwritten with a new build
+
+# Create a GCP service account with the following permissions:
+# Cloud Run Admin (allows for the creation of new Cloud Run services)
+# Service Account User (required to deploy to Cloud Run as service account)
+# Storage Admin (allow push to Google Container Registry)
+#     Google recommends reducing this scope to bucket level permissions.
+# Cloud Scheduler Admin (to create a scheduler job)
+# BigQuery Data Editor (for the cloud run service to upload data to BigQuery)
+
+# In the Service Account UI, click KEYS, then ADD KEY, then Create new key, then select JSON.
+# Copy the JSON text of the key into a GitHub secret for this repo and name the secret GCP_SA_KEY.
+
+# Note that by default Cloud Run does not allow anonymous runs.  Use the following from Cloud Shell
+# to create an identity token from the local environment:
+# curl <url> -G -H "Authorization: bearer $(gcloud auth print-identity-token)"
+
+name: Build and Deploy to Google Cloud Run
+
+# Manual trigger on github.com
+# This can also be triggered to run on merges, pull requests, etc
+on:
+  workflow_dispatch:
+    inputs:
+      project_id:
+        description: 'Google Cloud project id'
+        required: true
+      dataset_id:
+        description: 'Google BigQuery Dataset id'
+        required: true
+      table_id:
+        description: 'Google BigQuery table id'
+        required: true
+      service:
+        description: 'Cloud Run service name'
+        required: true
+      service_account_email:
+        description: 'Service account email'
+        required: true
+      region:
+        description: 'Cloud Run region'
+        required: true
+        default: 'us-east1'
+
+
+env:
+  PROJECT_ID: ${{ github.event.inputs.project_id }}
+  DATASET_ID: ${{ github.event.inputs.dataset_id }}
+  TABLE_ID: ${{ github.event.inputs.table_id }}
+  SERVICE: ${{ github.event.inputs.service }}
+  REGION: ${{ github.event.inputs.region }}
+  SERVICE_ACCT_EMAIL: ${{ github.event.inputs.service_account_email }}
+
+jobs:
+
+  # should add a linter and unit testing here
+
+  setup-build-push-deploy:
+    name: Setup, Build, Push, and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Authenticate to Google Cloud
+      uses: 'google-github-actions/auth@v0'
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Initialize Cloud SDK
+      uses: 'google-github-actions/setup-gcloud@v0.4.0'
+
+    # Configure Docker to use the gcloud command-line tool as a credential
+    # helper for authentication
+    - name: Authorize Docker push
+      run: gcloud auth configure-docker
+      
+    - name: Build and Push Container
+      run: |-
+        docker build -t gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }} .
+        docker push gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}
+
+    # Output of the Cloud Run Deploy action is the url of the deployed service
+    - name: Deploy to Cloud Run
+      id: deploy   # use the id to access the output url: steps.deploy.outputs.url
+      uses: google-github-actions/deploy-cloudrun@v0
+      with:
+        service: '${{ env.SERVICE }}'
+        image: 'gcr.io/${{ env.PROJECT_ID }}/${{ env.SERVICE }}:${{  github.sha }}'
+        region: '${{ env.REGION }}'
+        timeout: '10m'  # 10 minutes
+        env_vars: 'PROJECT_ID=${{ env.PROJECT_ID }},DATASET_ID=${{ env.DATASET_ID }},TABLE_ID=${{ env.TABLE_ID }}'
+
+    # There is no provided github action for Cloud Scheduler so use CLI
+    # The chron is set to run daily at 8am UTC (3am EST)
+    - name: Set Cloud Schedule
+      run: |-
+        gcloud scheduler jobs create http cloud-run-scheduler --schedule "0 8 * * *" \
+          --location '${{ env.REGION }}' \
+          --http-method GET \
+          --uri "${{ steps.deploy.outputs.url }}" \
+          --oidc-service-account-email "${{ env.SERVICE_ACCT_EMAIL }}" \
+          --oidc-token-audience "${{ steps.deploy.outputs.url }}"
+
+    - name: Show Output
+      run: echo ${{ steps.deploy.outputs.url }}
