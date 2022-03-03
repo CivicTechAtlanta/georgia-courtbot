@@ -13,7 +13,6 @@ module.exports = class QueryHearing {
     }
 
     parseCookies(rawCookies) {
-
         this.cookies = rawCookies.map((entry) => {
             const parts = entry.split(';');
             const cookiePart = parts[0];
@@ -28,7 +27,7 @@ module.exports = class QueryHearing {
             credentials: 'include',
             headers: {
                 'User-Agent': this.userAgent,
-                'Cookie': this.cookies
+                'cookie': this.cookies
             },
             method: 'POST',
             redirect: 'follow',
@@ -50,7 +49,7 @@ module.exports = class QueryHearing {
             credentials: 'include',
             headers: {
                 'User-Agent': this.userAgent,
-                'Cookie': this.cookies
+                'cookie': this.cookies
             },
             method: 'POST',
             body: this.formData({
