@@ -1,0 +1,12 @@
+{
+  "name": "queryHearing",
+  "version": "0.0.1",
+  "scripts": {
+    "run": "node main.js"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "form-data": "^4.0.0",
+    "node-fetch": "^2.6.7"
+  }
+}
